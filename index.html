@@ -103,7 +103,7 @@
         }
 
         .glass-nav {
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.9);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
         }
@@ -115,49 +115,49 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- Cintillo Superior Animado (Marquee en movimiento continuo) -->
-    <div class="bg-white text-black text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden whitespace-nowrap border-b border-zinc-300">
+    <!-- Cintillo Superior Animado -->
+    <div class="bg-white text-black text-[11px] sm:text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden whitespace-nowrap border-b border-zinc-300">
         <div class="inline-block animate-marquee">
-            <span class="mx-6">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
-            <span class="mx-6">•</span>
-            <span class="mx-6">100% PRODUCTOS ORIGINALES</span>
-            <span class="mx-6">•</span>
-            <span class="mx-6">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
-            <span class="mx-6">•</span>
-            <span class="mx-6">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
-            <span class="mx-6">•</span>
-            <span class="mx-6">100% PRODUCTOS ORIGINALES</span>
-            <span class="mx-6">•</span>
-            <span class="mx-6">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
-            <span class="mx-6">•</span>
+            <span class="mx-4">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">100% PRODUCTOS ORIGINALES</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">100% PRODUCTOS ORIGINALES</span>
+            <span class="mx-4">•</span>
+            <span class="mx-4">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+            <span class="mx-4">•</span>
         </div>
     </div>
 
-    <!-- Header Fijo -->
+    <!-- Header Fijo Responsivo -->
     <header class="sticky top-0 z-40 glass-nav border-b border-primo-border transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-20">
                 
                 <!-- Botón Menú Móvil -->
                 <div class="flex items-center md:hidden">
-                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="p-2.5 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-900 transition">
+                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="p-2 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-900 transition">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
 
                 <!-- Logotipo PRIMO CLUB -->
-                <a href="#inicio" class="flex items-center gap-3 group">
-                    <div class="relative w-10 h-10 rounded-xl bg-primo-card border border-zinc-700 flex items-center justify-center overflow-hidden group-hover:border-white transition">
+                <a href="#inicio" class="flex items-center gap-2.5 sm:gap-3 group">
+                    <div class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-primo-card border border-zinc-700 flex items-center justify-center overflow-hidden group-hover:border-white transition">
                         <img src="Logo.png" alt="Logo PRIMO CLUB" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <span class="hidden font-display font-extrabold text-shimmer text-lg tracking-tighter">PC</span>
+                        <span class="hidden font-display font-extrabold text-shimmer text-base tracking-tighter">PC</span>
                     </div>
                     <div class="flex flex-col">
-                        <span class="font-display font-extrabold text-xl tracking-wider text-shimmer leading-none">PRIMO CLUB</span>
-                        <span class="text-[10px] font-semibold tracking-[0.25em] text-primo-muted uppercase mt-1">HECHO EN MÉXICO</span>
+                        <span class="font-display font-extrabold text-lg sm:text-xl tracking-wider text-shimmer leading-none">PRIMO CLUB</span>
+                        <span class="text-[9px] sm:text-[10px] font-semibold tracking-[0.2em] text-primo-muted uppercase mt-1">HECHO EN MÉXICO</span>
                     </div>
                 </a>
 
-                <!-- Enlaces de Navegación -->
+                <!-- Enlaces de Navegación (Desktop) -->
                 <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-zinc-400">
                     <a href="#inicio" class="hover:text-white transition">Inicio</a>
                     <a href="#catalogo" class="hover:text-white transition">Catálogo</a>
@@ -166,14 +166,14 @@
                     <a href="#contacto" class="hover:text-white transition">Envíos & Contacto</a>
                 </nav>
 
-                <!-- Acciones Derecha (Guía Tallas & Carrito) -->
+                <!-- Acciones Derecha -->
                 <div class="flex items-center gap-2 sm:gap-4">
                     <button onclick="openSizeGuide()" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-primo-card hover:bg-zinc-800 border border-primo-border px-3.5 py-2.5 rounded-xl transition">
                         <i data-lucide="ruler" class="w-4 h-4 text-white"></i>
                         <span>Tallas</span>
                     </button>
 
-                    <button onclick="toggleCart()" aria-label="Ver carrito" class="relative p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-zinc-600 text-white transition group">
+                    <button onclick="toggleCart()" aria-label="Ver carrito" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-zinc-600 text-white transition group">
                         <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
                         <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-white text-black text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.7)]">
                             0
@@ -184,121 +184,121 @@
         </div>
 
         <!-- Menú Móvil Desplegable -->
-        <div id="mobile-menu" class="hidden md:hidden bg-primo-dark border-b border-primo-border px-4 pt-2 pb-6 space-y-2">
-            <a href="#inicio" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Inicio</a>
-            <a href="#catalogo" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Catálogo</a>
-            <a href="#esencia" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Nuestra Esencia</a>
-            <a href="#lookbook" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Lookbook</a>
-            <a href="#contacto" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Envíos & Contacto</a>
-            <button onclick="closeMobileMenu(); openSizeGuide();" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-white hover:bg-primo-card flex items-center gap-2">
-                <i data-lucide="ruler" class="w-4 h-4"></i> Guía de Tallas
+        <div id="mobile-menu" class="hidden md:hidden bg-primo-dark border-b border-primo-border px-6 pt-4 pb-8 space-y-3 shadow-2xl">
+            <a href="#inicio" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Inicio</a>
+            <a href="#catalogo" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Catálogo</a>
+            <a href="#esencia" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Nuestra Esencia</a>
+            <a href="#lookbook" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Lookbook</a>
+            <a href="#contacto" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Envíos & Contacto</a>
+            <button onclick="closeMobileMenu(); openSizeGuide();" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-white hover:bg-primo-card flex items-center gap-2.5 transition">
+                <i data-lucide="ruler" class="w-5 h-5 text-white"></i> Guía de Tallas
             </button>
         </div>
     </header>
 
     <!-- Sección Hero Principal -->
-    <section id="inicio" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-black">
+    <section id="inicio" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-black px-4 sm:px-6">
         <div class="absolute inset-0 z-0">
             <img src="fondo.png" alt="Fondo PRIMO CLUB" class="w-full h-full object-cover object-center opacity-40 grayscale contrast-125" onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1920&q=80'">
             <div class="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/60"></div>
         </div>
 
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
-            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primo-card/90 border border-zinc-700 text-white text-xs font-bold uppercase tracking-[0.2em] mb-7 box-glow-white">
+        <div class="relative z-10 max-w-7xl mx-auto py-16 sm:py-20 text-center">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primo-card/90 border border-zinc-700 text-white text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] mb-6 box-glow-white">
                 <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_#ffffff]"></span>
                 PRODUCTOS ORIGINALES
             </div>
 
-            <h1 class="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl tracking-tight uppercase leading-[0.98] mb-6 text-shimmer">
+            <h1 class="font-display font-extrabold text-4xl sm:text-7xl md:text-8xl tracking-tight uppercase leading-[1.05] sm:leading-[0.98] mb-6 text-shimmer">
                 La diferencia<br>se lleva puesta.
             </h1>
 
-            <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-zinc-300 font-normal leading-relaxed mb-10">
+            <p class="max-w-xl mx-auto text-sm sm:text-lg md:text-xl text-zinc-300 font-normal leading-relaxed mb-8 sm:mb-10 px-2">
                 Tienda 100% mexicana y 100% productos originales. Prendas de todo tipo de lujo y exclusivas para todo México.
             </p>
 
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="#catalogo" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-base uppercase tracking-wider transition transform hover:-translate-y-0.5 box-glow-white flex items-center justify-center gap-2">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5 w-full max-w-md mx-auto sm:max-w-none">
+                <a href="#catalogo" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-sm sm:text-base uppercase tracking-wider transition transform hover:-translate-y-0.5 box-glow-white flex items-center justify-center gap-2">
                     <span>Ver Catálogo</span>
                     <i data-lucide="arrow-down-right" class="w-5 h-5"></i>
                 </a>
-                <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primo-card/90 hover:bg-zinc-800 text-white border border-zinc-700 font-semibold text-base uppercase tracking-wider transition flex items-center justify-center gap-2">
+                <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primo-card/90 hover:bg-zinc-800 text-white border border-zinc-700 font-semibold text-sm sm:text-base uppercase tracking-wider transition flex items-center justify-center gap-2">
                     <span>Contacto Directo</span>
                 </a>
             </div>
 
             <!-- 3 Tarjetas Estadísticas -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mt-16 pt-10 border-t border-zinc-800/90 text-center">
-                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
-                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">100%</p>
-                    <p class="text-xs text-primo-muted mt-1">Productos Originales</p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 max-w-3xl mx-auto mt-12 sm:mt-16 pt-8 sm:pt-10 border-t border-zinc-800/90 text-center">
+                <div class="p-4 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-lg sm:text-2xl text-shimmer glow-white">100%</p>
+                    <p class="text-[11px] sm:text-xs text-primo-muted mt-0.5">Productos Originales</p>
                 </div>
-                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
-                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">Envíos</p>
-                    <p class="text-xs text-primo-muted mt-1">Envíos a todo México</p>
+                <div class="p-4 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-lg sm:text-2xl text-shimmer glow-white">Envíos</p>
+                    <p class="text-[11px] sm:text-xs text-primo-muted mt-0.5">A todo México</p>
                 </div>
-                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
-                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">24–72h</p>
-                    <p class="text-xs text-primo-muted mt-1">Envío Express Asegurado</p>
+                <div class="p-4 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-lg sm:text-2xl text-shimmer glow-white">24–72h</p>
+                    <p class="text-[11px] sm:text-xs text-primo-muted mt-0.5">Envío Express Asegurado</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Sección Catálogo -->
-    <section id="catalogo" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+    <section id="catalogo" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-6">
             <div>
                 <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Catálogo Oficial</span>
                 <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Lo Más Buscado del Club</h2>
-                <p class="text-primo-muted mt-2 max-w-xl">Selecciona tu talla favorita y arma tu outfit. Piezas exclusivas.</p>
+                <p class="text-primo-muted text-sm sm:text-base mt-2 max-w-xl">Selecciona tu talla favorita y arma tu outfit. Piezas exclusivas.</p>
             </div>
 
-            <!-- Botones de Filtro -->
-            <div class="flex flex-wrap gap-2" id="category-filters">
-                <button onclick="filterProducts('todos')" data-cat="todos" class="filter-btn active px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition">
+            <!-- Botones de Filtro (Desplazables en horizontal para móvil) -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-2 sm:pb-0 scrollbar-none" id="category-filters">
+                <button onclick="filterProducts('todos')" data-cat="todos" class="filter-btn active whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition">
                     Todos
                 </button>
-                <button onclick="filterProducts('playeras')" data-cat="playeras" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                <button onclick="filterProducts('playeras')" data-cat="playeras" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                     Playeras
                 </button>
-                <button onclick="filterProducts('hoodies')" data-cat="hoodies" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                <button onclick="filterProducts('hoodies')" data-cat="hoodies" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                     Hoodies
                 </button>
-                <button onclick="filterProducts('calzado')" data-cat="calzado" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                <button onclick="filterProducts('calzado')" data-cat="calzado" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                     Calzado
                 </button>
-                <button onclick="filterProducts('accesorios')" data-cat="accesorios" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                <button onclick="filterProducts('accesorios')" data-cat="accesorios" class="filter-btn whitespace-nowrap px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                     Gorras
                 </button>
             </div>
         </div>
 
         <!-- Grid de Productos -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             <!-- Renderizado dinámico vía JavaScript -->
         </div>
     </section>
 
     <!-- Sección Esencia / Historia -->
-    <section id="esencia" class="py-20 bg-primo-dark border-y border-primo-border">
+    <section id="esencia" class="py-16 sm:py-20 bg-primo-dark border-y border-primo-border">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="relative">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-center">
+                <div class="relative max-w-md mx-auto lg:max-w-none w-full">
                     <div class="aspect-[4/5] rounded-3xl overflow-hidden border border-primo-border shadow-2xl">
                         <img src="Mascota.png" alt="Esencia PRIMO CLUB" class="w-full h-full object-cover grayscale contrast-125">
                     </div>
                 </div>
 
-                <div class="space-y-6">
+                <div class="space-y-5 sm:space-y-6 text-center lg:text-left">
                     <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Nuestra Esencia</span>
                     <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer leading-tight">
                         Más que una marca de ropa, somos identidad.
                     </h2>
-                    <p class="text-zinc-300 text-base sm:text-lg leading-relaxed">
+                    <p class="text-zinc-300 text-sm sm:text-lg leading-relaxed">
                         <strong class="text-white">PRIMO CLUB</strong> nació de una plática con amigos donde querían empezar a emprender y lo que más les gusta es el lujo y la elegancia se formó la mejor tienda 100% campechana y mexicana PRIMO CLUB.
                     </p>
-                    <p class="text-primo-muted text-base leading-relaxed">
+                    <p class="text-primo-muted text-sm sm:text-base leading-relaxed">
                         Nuestro compromiso es brindar un servicio impecable, transparente y confiable, realizando envíos seguros a cada rincón de la República Mexicana.
                     </p>
                 </div>
@@ -307,14 +307,14 @@
     </section>
 
     <!-- Sección Lookbook -->
-    <section id="lookbook" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center max-w-2xl mx-auto mb-12">
+    <section id="lookbook" class="py-16 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
             <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Comunidad & Estilo</span>
             <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Lookbook Urbano</h2>
-            <p class="text-primo-muted mt-3">Etiquétanos en Instagram como <span class="text-white font-semibold">@primoclub_mx</span></p>
+            <p class="text-primo-muted text-sm sm:text-base mt-2">Etiquétanos en Instagram como <span class="text-white font-semibold">@primoclub_mx</span></p>
         </div>
 
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3.5 sm:gap-4">
             <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-primo-card border border-primo-border">
                 <img src="modelo1.jpg" alt="Look 1" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
             </div>
@@ -331,23 +331,23 @@
     </section>
 
     <!-- Sección Envíos & Contacto -->
-    <section id="contacto" class="py-20 bg-primo-dark border-t border-primo-border">
+    <section id="contacto" class="py-16 sm:py-20 bg-primo-dark border-t border-primo-border">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-14">
+            <div class="text-center max-w-2xl mx-auto mb-12 sm:mb-14">
                 <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Atención Personalizada</span>
                 <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Envíos & Contacto</h2>
-                <p class="text-primo-muted mt-3">Envíos asegurados a toda la República Mexicana y atención directa.</p>
+                <p class="text-primo-muted text-sm sm:text-base mt-2">Envíos asegurados a toda la República Mexicana y atención directa.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                <div class="p-6 sm:p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
                     <h3 class="font-display font-bold text-xl text-white mb-2">Envíos</h3>
                     <p class="text-primo-muted text-sm leading-relaxed">
                         Envíos a todo México 100% seguros
                     </p>
                 </div>
 
-                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                <div class="p-6 sm:p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
                     <h3 class="font-display font-bold text-xl text-white mb-2">Atención & WhatsApp</h3>
                     <p class="text-primo-muted text-sm leading-relaxed mb-4">
                         Teléfono / WhatsApp: <span class="text-white font-semibold">981 205 9251</span><br>
@@ -359,7 +359,7 @@
                     </a>
                 </div>
 
-                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                <div class="p-6 sm:p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
                     <h3 class="font-display font-bold text-xl text-white mb-2">Ventas y Mayoreo</h3>
                     <p class="text-primo-muted text-sm leading-relaxed">
                         ventas@primoclub_mx<br>
@@ -372,8 +372,8 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-black border-t border-primo-border py-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+    <footer class="bg-black border-t border-primo-border py-10 sm:py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <div class="flex items-center gap-3">
                 <span class="font-display font-extrabold text-xl text-shimmer tracking-wider">PRIMO CLUB</span>
                 <span class="text-xs text-zinc-500">| Hecho en México</span>
@@ -388,7 +388,7 @@
     <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
         <div onclick="toggleCart()" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
         <div class="absolute right-0 top-0 h-full w-full max-w-md bg-primo-dark border-l border-primo-border shadow-2xl flex flex-col">
-            <div class="p-6 border-b border-primo-border flex items-center justify-between">
+            <div class="p-5 sm:p-6 border-b border-primo-border flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
                     <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
                     <h3 class="font-display font-bold text-xl text-white">Tu Carrito</h3>
@@ -399,7 +399,7 @@
             </div>
 
             <!-- Barra de Envío Gratis -->
-            <div class="px-6 py-3.5 bg-primo-card/80 border-b border-primo-border">
+            <div class="px-5 sm:px-6 py-3.5 bg-primo-card/80 border-b border-primo-border">
                 <p id="free-shipping-text" class="text-xs text-zinc-300 mb-2">
                     Agrega <span class="text-white font-bold">$2,999</span> para obtener <span class="font-bold text-white glow-white">ENVÍO GRATIS</span>
                 </p>
@@ -409,10 +409,10 @@
             </div>
 
             <!-- Contenedor de Artículos -->
-            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4"></div>
 
             <!-- Totales y Checkout -->
-            <div class="p-6 border-t border-primo-border bg-primo-card/50 space-y-4">
+            <div class="p-5 sm:p-6 border-t border-primo-border bg-primo-card/50 space-y-4">
                 <div class="flex items-center justify-between text-sm text-primo-muted">
                     <span>Subtotal</span>
                     <span id="cart-subtotal" class="text-zinc-200 font-medium">$0 MXN</span>
@@ -562,7 +562,7 @@
                                 </span>
                             </div>
 
-                            <div class="p-6 pb-4">
+                            <div class="p-5 sm:p-6 pb-4">
                                 <h3 class="font-display font-bold text-xl text-white leading-snug mb-2">
                                     ${product.name}
                                 </h3>
@@ -592,8 +592,8 @@
                             </div>
                         </div>
 
-                        <!-- Precio y Botón en la parte inferior de la tarjeta (número de precio más chico) -->
-                        <div class="px-6 pb-6 pt-2 border-t border-primo-border mt-auto">
+                        <!-- Precio y Botón en la parte inferior de la tarjeta -->
+                        <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 border-t border-primo-border mt-auto">
                             <div class="flex items-center justify-between mb-4">
                                 <span class="text-xs text-zinc-400 uppercase font-medium">Precio:</span>
                                 <span class="font-display font-extrabold text-white text-lg">$${product.price.toLocaleString('es-MX')} MXN</span>
@@ -720,8 +720,8 @@
 
             checkoutBtn.disabled = false;
             container.innerHTML = cart.map(item => `
-                <div class="flex gap-4 p-3 rounded-2xl bg-primo-card border border-primo-border">
-                    <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${item.fallbackImage}'" class="w-20 h-24 rounded-xl ${item.cleanWhiteBg ? 'object-contain bg-white p-1' : 'object-cover grayscale bg-zinc-900'}">
+                <div class="flex gap-3.5 p-3 rounded-2xl bg-primo-card border border-primo-border">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${item.fallbackImage}'" class="w-16 h-20 sm:w-20 sm:h-24 rounded-xl ${item.cleanWhiteBg ? 'object-contain bg-white p-1' : 'object-cover grayscale bg-zinc-900'}">
                     <div class="flex-1 flex flex-col justify-between">
                         <div>
                             <div class="flex justify-between items-start gap-2">
