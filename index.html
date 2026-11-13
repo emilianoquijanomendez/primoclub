@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRIMO CLUB | Tienda Oficial de Ropa Streetwear</title>
+    
+    <!-- Favicon SVG Monocromático -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000000' stroke='%23ffffff' stroke-width='4'/><text x='50%' y='66%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='52' fill='%23ffffff'>PC</text></svg>">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Syne & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Syne', 'sans-serif'],
+                    },
+                    colors: {
+                        primo: {
+                            black: '#000000',
+                            dark: '#0a0a0a',
+                            card: '#141414',
+                            border: '#262626',
+                            silver: '#e4e4e7',
+                            muted: '#a1a1aa',
+                        }
+                    },
+                    animation: {
+                        'marquee': 'marquee 25s linear infinite',
+                        'shimmer': 'shimmer 3.5s linear infinite',
+                    },
+                    keyframes: {
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-50%)' },
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-200% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffffff;
+        }
+
+        .text-shimmer {
+            background: linear-gradient(
+                110deg,
+                #71717a 15%,
+                #ffffff 38%,
+                #e4e4e7 50%,
+                #ffffff 62%,
+                #71717a 85%
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: shimmer 3.5s linear infinite;
+            filter: drop-shadow(0 0 18px rgba(255, 255, 255, 0.28));
+        }
+
+        .glow-white {
+            text-shadow: 0 0 22px rgba(255, 255, 255, 0.45);
+        }
+
+        .box-glow-white {
+            box-shadow: 0 0 25px rgba(255, 255, 255, 0.14);
+        }
+
+        .glass-nav {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.06);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-white selection:text-black">
+
+    <!-- Cintillo Superior Animado (Marquee en movimiento continuo) -->
+    <div class="bg-white text-black text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden whitespace-nowrap border-b border-zinc-300">
+        <div class="inline-block animate-marquee">
+            <span class="mx-6">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+            <span class="mx-6">•</span>
+            <span class="mx-6">100% PRODUCTOS ORIGINALES</span>
+            <span class="mx-6">•</span>
+            <span class="mx-6">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+            <span class="mx-6">•</span>
+            <span class="mx-6">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+            <span class="mx-6">•</span>
+            <span class="mx-6">100% PRODUCTOS ORIGINALES</span>
+            <span class="mx-6">•</span>
+            <span class="mx-6">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+            <span class="mx-6">•</span>
+        </div>
+    </div>
+
+    <!-- Header Fijo -->
+    <header class="sticky top-0 z-40 glass-nav border-b border-primo-border transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Botón Menú Móvil -->
+                <div class="flex items-center md:hidden">
+                    <button id="mobile-menu-btn" aria-label="Abrir menú" class="p-2.5 rounded-xl text-zinc-300 hover:text-white hover:bg-zinc-900 transition">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+
+                <!-- Logotipo PRIMO CLUB -->
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="relative w-10 h-10 rounded-xl bg-primo-card border border-zinc-700 flex items-center justify-center overflow-hidden group-hover:border-white transition">
+                        <img src="Logo.png" alt="Logo PRIMO CLUB" class="w-full h-full object-contain p-1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <span class="hidden font-display font-extrabold text-shimmer text-lg tracking-tighter">PC</span>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-display font-extrabold text-xl tracking-wider text-shimmer leading-none">PRIMO CLUB</span>
+                        <span class="text-[10px] font-semibold tracking-[0.25em] text-primo-muted uppercase mt-1">HECHO EN MÉXICO</span>
+                    </div>
+                </a>
+
+                <!-- Enlaces de Navegación -->
+                <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-zinc-400">
+                    <a href="#inicio" class="hover:text-white transition">Inicio</a>
+                    <a href="#catalogo" class="hover:text-white transition">Catálogo</a>
+                    <a href="#esencia" class="hover:text-white transition">Nuestra Esencia</a>
+                    <a href="#lookbook" class="hover:text-white transition">Lookbook</a>
+                    <a href="#contacto" class="hover:text-white transition">Envíos & Contacto</a>
+                </nav>
+
+                <!-- Acciones Derecha (Guía Tallas & Carrito) -->
+                <div class="flex items-center gap-2 sm:gap-4">
+                    <button onclick="openSizeGuide()" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-primo-card hover:bg-zinc-800 border border-primo-border px-3.5 py-2.5 rounded-xl transition">
+                        <i data-lucide="ruler" class="w-4 h-4 text-white"></i>
+                        <span>Tallas</span>
+                    </button>
+
+                    <button onclick="toggleCart()" aria-label="Ver carrito" class="relative p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-zinc-600 text-white transition group">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-white text-black text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.7)]">
+                            0
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-primo-dark border-b border-primo-border px-4 pt-2 pb-6 space-y-2">
+            <a href="#inicio" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Inicio</a>
+            <a href="#catalogo" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Catálogo</a>
+            <a href="#esencia" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Nuestra Esencia</a>
+            <a href="#lookbook" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Lookbook</a>
+            <a href="#contacto" onclick="closeMobileMenu()" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white">Envíos & Contacto</a>
+            <button onclick="closeMobileMenu(); openSizeGuide();" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-white hover:bg-primo-card flex items-center gap-2">
+                <i data-lucide="ruler" class="w-4 h-4"></i> Guía de Tallas
+            </button>
+        </div>
+    </header>
+
+    <!-- Sección Hero Principal -->
+    <section id="inicio" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-black">
+        <div class="absolute inset-0 z-0">
+            <img src="fondo.png" alt="Fondo PRIMO CLUB" class="w-full h-full object-cover object-center opacity-40 grayscale contrast-125" onerror="this.src='https://images.unsplash.com/photo-1523398002811-999ca8dec234?auto=format&fit=crop&w=1920&q=80'">
+            <div class="absolute inset-0 bg-gradient-to-t from-black via-black/75 to-black/60"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-primo-card/90 border border-zinc-700 text-white text-xs font-bold uppercase tracking-[0.2em] mb-7 box-glow-white">
+                <span class="w-2 h-2 rounded-full bg-white animate-pulse shadow-[0_0_8px_#ffffff]"></span>
+                PRODUCTOS ORIGINALES
+            </div>
+
+            <h1 class="font-display font-extrabold text-5xl sm:text-7xl md:text-8xl tracking-tight uppercase leading-[0.98] mb-6 text-shimmer">
+                La diferencia<br>se lleva puesta.
+            </h1>
+
+            <p class="max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-zinc-300 font-normal leading-relaxed mb-10">
+                Tienda 100% mexicana y 100% productos originales. Prendas de todo tipo de lujo y exclusivas para todo México.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#catalogo" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-base uppercase tracking-wider transition transform hover:-translate-y-0.5 box-glow-white flex items-center justify-center gap-2">
+                    <span>Ver Catálogo</span>
+                    <i data-lucide="arrow-down-right" class="w-5 h-5"></i>
+                </a>
+                <a href="#contacto" class="w-full sm:w-auto px-8 py-4 rounded-2xl bg-primo-card/90 hover:bg-zinc-800 text-white border border-zinc-700 font-semibold text-base uppercase tracking-wider transition flex items-center justify-center gap-2">
+                    <span>Contacto Directo</span>
+                </a>
+            </div>
+
+            <!-- 3 Tarjetas Estadísticas -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto mt-16 pt-10 border-t border-zinc-800/90 text-center">
+                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">100%</p>
+                    <p class="text-xs text-primo-muted mt-1">Productos Originales</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">Envíos</p>
+                    <p class="text-xs text-primo-muted mt-1">Envíos a todo México</p>
+                </div>
+                <div class="p-5 rounded-2xl bg-primo-dark/80 border border-zinc-900 backdrop-blur-sm">
+                    <p class="font-display font-bold text-xl sm:text-2xl text-shimmer glow-white">24–72h</p>
+                    <p class="text-xs text-primo-muted mt-1">Envío Express Asegurado</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Catálogo -->
+    <section id="catalogo" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Catálogo Oficial</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Lo Más Buscado del Club</h2>
+                <p class="text-primo-muted mt-2 max-w-xl">Selecciona tu talla favorita y arma tu outfit. Piezas exclusivas.</p>
+            </div>
+
+            <!-- Botones de Filtro -->
+            <div class="flex flex-wrap gap-2" id="category-filters">
+                <button onclick="filterProducts('todos')" data-cat="todos" class="filter-btn active px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition">
+                    Todos
+                </button>
+                <button onclick="filterProducts('playeras')" data-cat="playeras" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                    Playeras
+                </button>
+                <button onclick="filterProducts('hoodies')" data-cat="hoodies" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                    Hoodies
+                </button>
+                <button onclick="filterProducts('calzado')" data-cat="calzado" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                    Calzado
+                </button>
+                <button onclick="filterProducts('accesorios')" data-cat="accesorios" class="filter-btn px-4 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                    Gorras
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid de Productos -->
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <!-- Renderizado dinámico vía JavaScript -->
+        </div>
+    </section>
+
+    <!-- Sección Esencia / Historia -->
+    <section id="esencia" class="py-20 bg-primo-dark border-y border-primo-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="relative">
+                    <div class="aspect-[4/5] rounded-3xl overflow-hidden border border-primo-border shadow-2xl">
+                        <img src="Mascota.png" alt="Esencia PRIMO CLUB" class="w-full h-full object-cover grayscale contrast-125">
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Nuestra Esencia</span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer leading-tight">
+                        Más que una marca de ropa, somos identidad.
+                    </h2>
+                    <p class="text-zinc-300 text-base sm:text-lg leading-relaxed">
+                        <strong class="text-white">PRIMO CLUB</strong> nació de una plática con amigos donde querían empezar a emprender y lo que más les gusta es el lujo y la elegancia se formó la mejor tienda 100% campechana y mexicana PRIMO CLUB.
+                    </p>
+                    <p class="text-primo-muted text-base leading-relaxed">
+                        Nuestro compromiso es brindar un servicio impecable, transparente y confiable, realizando envíos seguros a cada rincón de la República Mexicana.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Lookbook -->
+    <section id="lookbook" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Comunidad & Estilo</span>
+            <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Lookbook Urbano</h2>
+            <p class="text-primo-muted mt-3">Etiquétanos en Instagram como <span class="text-white font-semibold">@primoclub_mx</span></p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-primo-card border border-primo-border">
+                <img src="modelo1.jpg" alt="Look 1" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-primo-card border border-primo-border">
+                <img src="modelo2.jpg" alt="Look 2" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-primo-card border border-primo-border">
+                <img src="modelo3.jpg" alt="Look 3" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
+            </div>
+            <div class="group relative aspect-[3/4] rounded-2xl overflow-hidden bg-primo-card border border-primo-border">
+                <img src="modelo4.jpg" alt="Look 4" class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition duration-500">
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección Envíos & Contacto -->
+    <section id="contacto" class="py-20 bg-primo-dark border-t border-primo-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-2xl mx-auto mb-14">
+                <span class="text-primo-muted font-bold text-xs uppercase tracking-[0.2em]">Atención Personalizada</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-shimmer mt-2">Envíos & Contacto</h2>
+                <p class="text-primo-muted mt-3">Envíos asegurados a toda la República Mexicana y atención directa.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Envíos</h3>
+                    <p class="text-primo-muted text-sm leading-relaxed">
+                        Envíos a todo México 100% seguros
+                    </p>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Atención & WhatsApp</h3>
+                    <p class="text-primo-muted text-sm leading-relaxed mb-4">
+                        Teléfono / WhatsApp: <span class="text-white font-semibold">555-PRIMO-CLUB</span><br>
+                        Lunes a Sábado: 10:00 AM - 08:00 PM
+                    </p>
+                    <a href="https://wa.me/525551234567?text=Hola%20PRIMO%20CLUB,%20me%20interesa%20información%20sobre%20sus%20prendas" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-xs font-bold text-white hover:underline uppercase tracking-wider glow-white">
+                        <span>Escribir por WhatsApp</span>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
+                <div class="p-8 rounded-3xl bg-primo-card border border-primo-border hover:border-zinc-500 transition">
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Ventas y Mayoreo</h3>
+                    <p class="text-primo-muted text-sm leading-relaxed">
+                        ventas@primoclub_mx<br>
+                        Envíos asegurados a todo México<br>
+                        Atención personalizada
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-primo-border py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div class="flex items-center gap-3">
+                <span class="font-display font-extrabold text-xl text-shimmer tracking-wider">PRIMO CLUB</span>
+                <span class="text-xs text-zinc-500">| Hecho en México</span>
+            </div>
+            <p class="text-xs text-zinc-500">
+                © 2026 PRIMO CLUB. Todos los derechos reservados. Tienda 100% Mexicana • Productos 100% Originales.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Drawer Lateral del Carrito -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCart()" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-primo-dark border-l border-primo-border shadow-2xl flex flex-col">
+            <div class="p-6 border-b border-primo-border flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
+                    <h3 class="font-display font-bold text-xl text-white">Tu Carrito</h3>
+                </div>
+                <button onclick="toggleCart()" aria-label="Cerrar carrito" class="p-2 rounded-xl text-primo-muted hover:text-white hover:bg-primo-card transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <!-- Barra de Envío Gratis -->
+            <div class="px-6 py-3.5 bg-primo-card/80 border-b border-primo-border">
+                <p id="free-shipping-text" class="text-xs text-zinc-300 mb-2">
+                    Agrega <span class="text-white font-bold">$2,999</span> para obtener <span class="font-bold text-white glow-white">ENVÍO GRATIS</span>
+                </p>
+                <div class="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                    <div id="free-shipping-bar" class="h-full bg-white shadow-[0_0_10px_#ffffff] transition-all duration-300" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Contenedor de Artículos -->
+            <div id="cart-items-container" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+
+            <!-- Totales y Checkout -->
+            <div class="p-6 border-t border-primo-border bg-primo-card/50 space-y-4">
+                <div class="flex items-center justify-between text-sm text-primo-muted">
+                    <span>Subtotal</span>
+                    <span id="cart-subtotal" class="text-zinc-200 font-medium">$0 MXN</span>
+                </div>
+                <div class="flex items-center justify-between text-sm text-primo-muted">
+                    <span>Envío Asegurado</span>
+                    <span id="cart-shipping" class="text-white font-medium">$250 MXN</span>
+                </div>
+                <div class="flex items-center justify-between text-lg font-bold text-white pt-2 border-t border-zinc-800">
+                    <span>Total</span>
+                    <span id="cart-total" class="font-display text-white glow-white">$0 MXN</span>
+                </div>
+
+                <button onclick="checkoutWhatsApp()" id="checkout-btn" disabled class="w-full py-4 px-6 rounded-2xl bg-white hover:bg-zinc-200 disabled:opacity-30 disabled:cursor-not-allowed text-black font-bold text-sm uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Finalizar Pedido por WhatsApp</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Guía de Tallas -->
+    <div id="size-guide-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
+        <div onclick="closeSizeGuide()" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
+        <div class="relative bg-primo-dark border border-zinc-700 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl z-10">
+            <div class="flex items-center justify-between mb-6">
+                <div>
+                    <span class="text-xs font-bold text-primo-muted uppercase tracking-wider">Fit Urbano</span>
+                    <h3 class="font-display font-bold text-2xl text-white">Guía de Tallas (CM)</h3>
+                </div>
+                <button onclick="closeSizeGuide()" class="p-2 rounded-xl bg-primo-card text-primo-muted hover:text-white">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+
+            <div class="overflow-x-auto rounded-2xl border border-primo-border">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-primo-card text-zinc-300 text-xs uppercase">
+                        <tr>
+                            <th class="px-4 py-3">Talla</th>
+                            <th class="px-4 py-3">Ancho (Pecho)</th>
+                            <th class="px-4 py-3">Largo Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-primo-border text-zinc-300">
+                        <tr><td class="px-4 py-3 font-bold text-white">S</td><td class="px-4 py-3">52 cm</td><td class="px-4 py-3">70 cm</td></tr>
+                        <tr><td class="px-4 py-3 font-bold text-white">M</td><td class="px-4 py-3">55 cm</td><td class="px-4 py-3">72 cm</td></tr>
+                        <tr><td class="px-4 py-3 font-bold text-white">L</td><td class="px-4 py-3">58 cm</td><td class="px-4 py-3">74 cm</td></tr>
+                        <tr><td class="px-4 py-3 font-bold text-white">XL</td><td class="px-4 py-3">61 cm</td><td class="px-4 py-3">76 cm</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <button onclick="closeSizeGuide()" class="mt-6 w-full py-3 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-sm transition">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenedor de Notificaciones Toast -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Lógica de la Tienda en JavaScript -->
+    <script>
+        const products = [
+            {
+                id: 1,
+                name: 'Playera essential',
+                category: 'playeras',
+                price: 800,
+                tag: 'MÁS VENDIDA',
+                description: 'Diseño impecable y minimalista con acabado de lujo para uso diario.',
+                image: 'playera.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 2,
+                name: 'Hoodie essential',
+                category: 'hoodies',
+                price: 1800,
+                tag: 'EDICIÓN EXCLUSIVA',
+                description: 'Sudadera con gorro de doble capa, corte boxy fit y acabado premium.',
+                image: 'hoodie.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 3,
+                name: 'Tenis veja',
+                category: 'calzado',
+                price: 2800,
+                tag: 'CALZADO',
+                description: 'Tenis minimalistas de lujo y diseño sostenible con acabados premium.',
+                image: 'veja.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['26', '27', '28', '29']
+            },
+            {
+                id: 4,
+                name: 'Gorra alo',
+                category: 'accesorios',
+                price: 800,
+                tag: 'ACCESORIOS',
+                description: 'Gorra estructurada de alto rendimiento con diseño minimalista y ajuste cómodo.',
+                image: 'alo.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['Unitalla']
+            }
+        ];
+
+        let cart = [];
+        let selectedSizes = {};
+        const FREE_SHIPPING_THRESHOLD = 2999;
+        const SHIPPING_COST = 250;
+
+        products.forEach(p => {
+            selectedSizes[p.id] = p.sizes[0];
+        });
+
+        function renderProducts(category = 'todos') {
+            const grid = document.getElementById('products-grid');
+            const filtered = category === 'todos' 
+                ? products 
+                : products.filter(p => p.category === category);
+
+            grid.innerHTML = filtered.map(product => {
+                const activeSize = selectedSizes[product.id];
+                const imgContainerClass = product.cleanWhiteBg
+                    ? 'relative aspect-[4/5] bg-white p-4 overflow-hidden flex items-center justify-center'
+                    : 'relative aspect-[4/5] bg-zinc-950 overflow-hidden';
+                const imgClass = product.cleanWhiteBg
+                    ? 'product-img w-full h-full object-contain transition duration-500'
+                    : 'product-img w-full h-full object-cover grayscale contrast-110 transition duration-500';
+
+                return `
+                    <article class="product-card bg-primo-card border border-primo-border rounded-3xl overflow-hidden flex flex-col justify-between transition duration-300 hover:border-zinc-500 shadow-2xl">
+                        <div>
+                            <div class="${imgContainerClass}">
+                                <img src="${product.image}" alt="${product.name}" class="${imgClass}" onerror="this.onerror=null; this.src='${product.fallbackImage}'">
+                                <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-zinc-700 text-white text-[10px] font-bold uppercase tracking-wider">
+                                    ${product.tag}
+                                </span>
+                            </div>
+
+                            <div class="p-6 pb-4">
+                                <h3 class="font-display font-bold text-xl text-white leading-snug mb-2">
+                                    ${product.name}
+                                </h3>
+                                <p class="text-xs text-primo-muted leading-relaxed mb-4">
+                                    ${product.description}
+                                </p>
+
+                                <div class="mb-4">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <span class="text-xs font-semibold text-zinc-300">Talla:</span>
+                                        <button onclick="openSizeGuide()" class="text-[11px] text-white hover:underline">Guía de tallas</button>
+                                    </div>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${product.sizes.map(size => `
+                                            <button 
+                                                onclick="selectSize(${product.id}, '${size}')"
+                                                class="px-3.5 py-1.5 rounded-xl text-xs font-bold border transition ${
+                                                    activeSize === size 
+                                                    ? 'bg-white text-black border-white shadow-[0_0_10px_rgba(255,255,255,0.3)]' 
+                                                    : 'bg-primo-dark text-zinc-300 border-zinc-800 hover:border-zinc-500'
+                                                }">
+                                                ${size}
+                                            </button>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Precio y Botón en la parte inferior de la tarjeta (número de precio más chico) -->
+                        <div class="px-6 pb-6 pt-2 border-t border-primo-border mt-auto">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs text-zinc-400 uppercase font-medium">Precio:</span>
+                                <span class="font-display font-extrabold text-white text-lg">$${product.price.toLocaleString('es-MX')} MXN</span>
+                            </div>
+                            <button onclick="addToCart(${product.id})" class="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white active:scale-95">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span>Agregar al Carrito</span>
+                            </button>
+                        </div>
+                    </article>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function filterProducts(category) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                if (btn.dataset.cat === category) {
+                    btn.classList.remove('bg-primo-card', 'text-zinc-300', 'border', 'border-primo-border');
+                    btn.classList.add('bg-white', 'text-black');
+                } else {
+                    btn.classList.add('bg-primo-card', 'text-zinc-300', 'border', 'border-primo-border');
+                    btn.classList.remove('bg-white', 'text-black');
+                }
+            });
+            renderProducts(category);
+        }
+
+        function selectSize(productId, size) {
+            selectedSizes[productId] = size;
+            const activeCat = document.querySelector('.filter-btn.bg-white')?.dataset.cat || 'todos';
+            renderProducts(activeCat);
+        }
+
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const size = selectedSizes[productId];
+            const cartKey = `${productId}-${size}`;
+
+            const existingItem = cart.find(item => item.cartKey === cartKey);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    cartKey,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    fallbackImage: product.fallbackImage,
+                    cleanWhiteBg: product.cleanWhiteBg,
+                    size: size,
+                    quantity: 1
+                });
+            }
+
+            updateCartUI();
+            toggleCart();
+            showToast(`Agregado: ${product.name} (Talla ${size})`);
+        }
+
+        function updateQuantity(cartKey, delta) {
+            const itemIndex = cart.findIndex(item => item.cartKey === cartKey);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += delta;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1);
+                }
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items-container');
+            const badge = document.getElementById('cart-badge');
+            const subtotalEl = document.getElementById('cart-subtotal');
+            const totalEl = document.getElementById('cart-total');
+            const shippingEl = document.getElementById('cart-shipping');
+            const checkoutBtn = document.getElementById('checkout-btn');
+            const freeShippingText = document.getElementById('free-shipping-text');
+            const freeShippingBar = document.getElementById('free-shipping-bar');
+
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+            badge.textContent = totalItems;
+            subtotalEl.textContent = `$${subtotal.toLocaleString('es-MX')} MXN`;
+
+            const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+            const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+            freeShippingBar.style.width = `${progress}%`;
+
+            if (subtotal >= FREE_SHIPPING_THRESHOLD && subtotal > 0) {
+                freeShippingText.innerHTML = `<span class="text-white font-bold glow-white">¡FELICIDADES!</span> Tienes <span class="text-white font-bold">ENVÍO GRATIS</span> en tu pedido.`;
+                shippingEl.textContent = 'GRATIS';
+                shippingEl.className = 'text-white font-bold glow-white';
+            } else {
+                freeShippingText.innerHTML = `Agrega <span class="text-white font-bold">$${remaining.toLocaleString('es-MX')}</span> más para obtener <span class="font-bold text-white">ENVÍO GRATIS</span>`;
+                shippingEl.textContent = subtotal === 0 ? '$0 MXN' : `$${SHIPPING_COST} MXN`;
+                shippingEl.className = 'text-zinc-200 font-medium';
+            }
+
+            const shippingCost = (subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
+            const finalTotal = subtotal + shippingCost;
+            totalEl.textContent = `$${finalTotal.toLocaleString('es-MX')} MXN`;
+
+            if (cart.length === 0) {
+                checkoutBtn.disabled = true;
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12">
+                        <div class="w-16 h-16 rounded-2xl bg-primo-card border border-primo-border flex items-center justify-center text-primo-muted mb-4">
+                            <i data-lucide="shopping-bag" class="w-7 h-7"></i>
+                        </div>
+                        <p class="font-display font-bold text-lg text-white">Tu carrito está vacío</p>
+                        <p class="text-xs text-primo-muted max-w-xs mt-1 mb-6">Explora nuestro catálogo y agrega tus prendas favoritas de PRIMO CLUB.</p>
+                        <button onclick="toggleCart()" class="px-6 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider transition">
+                            Ver Prendas
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            container.innerHTML = cart.map(item => `
+                <div class="flex gap-4 p-3 rounded-2xl bg-primo-card border border-primo-border">
+                    <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${item.fallbackImage}'" class="w-20 h-24 rounded-xl ${item.cleanWhiteBg ? 'object-contain bg-white p-1' : 'object-cover grayscale bg-zinc-900'}">
+                    <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-start gap-2">
+                                <h4 class="font-bold text-sm text-white leading-tight">${item.name}</h4>
+                                <button onclick="updateQuantity('${item.cartKey}', -${item.quantity})" class="text-zinc-500 hover:text-white transition" title="Eliminar">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                            <span class="inline-block mt-1 px-2 py-0.5 rounded bg-zinc-800 border border-zinc-700 text-[11px] font-semibold text-white">
+                                Talla: ${item.size}
+                            </span>
+                        </div>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="font-bold text-sm text-white">$${(item.price * item.quantity).toLocaleString('es-MX')}</span>
+                            <div class="flex items-center gap-2 bg-black border border-zinc-800 rounded-xl px-2 py-1">
+                                <button onclick="updateQuantity('${item.cartKey}', -1)" class="w-6 h-6 flex items-center justify-center text-primo-muted hover:text-white">-</button>
+                                <span class="text-xs font-bold text-white w-4 text-center">${item.quantity}</span>
+                                <button onclick="updateQuantity('${item.cartKey}', 1)" class="w-6 h-6 flex items-center justify-center text-primo-muted hover:text-white">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        function checkoutWhatsApp() {
+            if (cart.length === 0) return;
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const shipping = shippingCost === 0 ? 'GRATIS' : `$${SHIPPING_COST} MXN`;
+            const total = subtotal + shippingCost;
+
+            let message = `Hola *PRIMO CLUB*, ¡quiero hacer el siguiente pedido:%0A%0A`;
+            cart.forEach((item, index) => {
+                message += `${index + 1}. *${item.name}* (Talla: ${item.size}) x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-MX')} MXN%0A`;
+            });
+            message += `%0ASubtotal: $${subtotal.toLocaleString('es-MX')} MXN`;
+            message += `%0AEnvío Asegurado: ${shipping}`;
+            message += `%0A*Total: $${total.toLocaleString('es-MX')} MXN*%0A%0A¡Quedo a la espera para coordinar el pago y envío!`;
+
+            const whatsappUrl = `https://wa.me/525551234567?text=${message}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer');
+            drawer.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        function closeMobileMenu() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        }
+
+        function openSizeGuide() {
+            const modal = document.getElementById('size-guide-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeSizeGuide() {
+            const modal = document.getElementById('size-guide-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function showToast(text) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-primo-dark border border-white/40 text-white px-4 py-3 rounded-2xl shadow-[0_0_20px_rgba(255,255,255,0.15)] flex items-center gap-3 text-xs font-semibold transform transition-all duration-300 translate-y-2 opacity-0';
+            toast.innerHTML = `
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-white"></i>
+                <span>${text}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderProducts('todos');
+            updateCartUI();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
