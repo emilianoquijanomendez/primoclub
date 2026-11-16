@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo Completo | PRIMO CLUB</title>
     
-    <!-- Favicon SVG Monocromático -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23000000' stroke='%23ffffff' stroke-width='4'/><text x='50%' y='66%' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='52' fill='%23ffffff'>PC</text></svg>">
+    <!-- Favicon PRIMO CLUB -->
+    <link rel="icon" type="image/png" href="pestaña.png">
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -38,12 +38,12 @@
                         }
                     },
                     animation: {
-                        'marquee': 'marquee 25s linear infinite',
+                        'marquee': 'marquee 22s linear infinite',
                         'shimmer': 'shimmer 3.5s linear infinite',
                     },
                     keyframes: {
                         marquee: {
-                            '0%': { transform: 'translateX(0%)' },
+                            '0%': { transform: 'translateX(0)' },
                             '100%': { transform: 'translateX(-50%)' },
                         },
                         shimmer: {
@@ -111,25 +111,44 @@
         .product-card:hover .product-img {
             transform: scale(1.06);
         }
+
+        /* Transición exclusiva para la sección de accesorios */
+        .section-reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .section-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- Cintillo Superior Animado -->
-    <div class="bg-white text-black text-[11px] sm:text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden whitespace-nowrap border-b border-zinc-300">
-        <div class="inline-block animate-marquee">
-            <span class="mx-4">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
-            <span class="mx-4">•</span>
-            <span class="mx-4">100% PRODUCTOS ORIGINALES</span>
-            <span class="mx-4">•</span>
-            <span class="mx-4">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
-            <span class="mx-4">•</span>
-            <span class="mx-4">✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
-            <span class="mx-4">•</span>
-            <span class="mx-4">100% PRODUCTOS ORIGINALES</span>
-            <span class="mx-4">•</span>
-            <span class="mx-4">ENVÍOS ASEGURADOS A TODO MÉXICO</span>
-            <span class="mx-4">•</span>
+    <!-- Cintillo Superior Animado Continuo y Sin Parpadeos -->
+    <div class="bg-white text-black text-[11px] sm:text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden border-b border-zinc-300">
+        <div class="flex w-[200%] animate-marquee">
+            <!-- Bloque 1 -->
+            <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
+                <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+                <span>•</span>
+                <span>100% PRODUCTOS ORIGINALES</span>
+                <span>•</span>
+                <span>ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+                <span>•</span>
+            </div>
+            <!-- Bloque 2 (Duplicado exacto para bucle infinito) -->
+            <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
+                <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
+                <span>•</span>
+                <span>100% PRODUCTOS ORIGINALES</span>
+                <span>•</span>
+                <span>ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+                <span>•</span>
+            </div>
         </div>
     </div>
 
@@ -206,7 +225,10 @@
                     <span class="text-white">Catálogo Completo</span>
                 </div>
                 <h1 class="font-display font-extrabold text-4xl sm:text-6xl text-shimmer">Catálogo Oficial</h1>
-                <p class="text-primo-muted text-sm sm:text-base mt-2 max-w-xl">Explora todas nuestras prendas exclusivas de lujo, selecciona tu talla y arma tu pedido con envío asegurado a todo México.</p>
+                <p class="text-primo-muted text-sm sm:text-base mt-2 max-w-xl">
+                    Explora todas nuestras prendas exclusivas de lujo, selecciona tu talla y arma tu pedido con envío asegurado a todo México.<br>
+                    <span class="text-white font-semibold mt-1 inline-block glow-white">Pregunta tu talla y mas modelos al WhatsApp</span>
+                </p>
             </div>
 
             <!-- Buscador en Tiempo Real (Ropa & Calzado) -->
@@ -221,10 +243,10 @@
 
     <!-- SECCIÓN 1: Ropa & Calzado -->
     <section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Botones de Filtro por Categoría -->
+        <!-- Botones de Filtro por Categoría (Incluyendo Deportes) -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none" id="category-filters">
             <button onclick="setCategory('todos')" data-cat="todos" class="filter-btn active whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition shadow-[0_0_15px_rgba(255,255,255,0.2)]">
-                Todos (25)
+                Todos (<span id="total-count">29</span>)
             </button>
             <button onclick="setCategory('playeras')" data-cat="playeras" class="filter-btn whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                 Playeras
@@ -240,6 +262,9 @@
             </button>
             <button onclick="setCategory('calzado')" data-cat="calzado" class="filter-btn whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
                 Calzado
+            </button>
+            <button onclick="setCategory('deportes')" data-cat="deportes" class="filter-btn whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-primo-card text-zinc-300 hover:bg-zinc-800 border border-primo-border transition">
+                Deportes
             </button>
         </div>
 
@@ -261,8 +286,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2 SEPARADA: Accesorios, Tecnología & Otros -->
-    <section class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-primo-border mt-8">
+    <!-- SECCIÓN 2 SEPARADA: Accesorios, Tecnología & Otros (Con Transición Exclusiva) -->
+    <section id="extras-section" class="section-reveal py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-primo-border mt-8">
         <!-- Encabezado y Buscador Propio -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
@@ -377,7 +402,7 @@
         </div>
     </div>
 
-    <!-- Modal Guía de Tallas (Actualizado) -->
+    <!-- Modal Guía de Tallas -->
     <div id="size-guide-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div onclick="closeSizeGuide()" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
         <div class="relative bg-primo-dark border border-zinc-700 rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl z-10 max-h-[90vh] overflow-y-auto">
@@ -455,10 +480,63 @@
 
     <!-- Lógica del Catálogo en JavaScript -->
     <script>
-        // Catálogo 1: Ropa y Calzado
         const products = [
             {
                 id: 1,
+                name: 'Chaqueta Lululemon',
+                category: 'sudaderas',
+                sportItem: true,
+                price: 2800,
+                originalPrice: 3400,
+                tag: 'NUEVO INGRESO',
+                description: 'Chaqueta deportiva de alta gama Lululemon con tejido técnico transpirable y diseño ergonómico.',
+                image: 'lulu.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 2,
+                name: 'Playera Burberry',
+                category: 'playeras',
+                price: 1800,
+                originalPrice: 2400,
+                tag: 'LUJO EXCLUSIVO',
+                description: 'Playera de diseño de alta costura Burberry con patrones icónicos y calidad prémium.',
+                image: 'burberry.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['S', 'M', 'L', 'XL']
+            },
+            {
+                id: 3,
+                name: 'Tenis On Cloudmonster 2',
+                category: 'calzado',
+                sportItem: true,
+                price: 3400,
+                originalPrice: 4000,
+                tag: 'RUNNING & TECH',
+                description: 'Tenis On Cloudmonster 2 con máxima amortiguación CloudTec y diseño futurista para máximo confort.',
+                image: 'on.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['26', '27', '28', '29']
+            },
+            {
+                id: 4,
+                name: 'Golden Goose Stardan',
+                category: 'calzado',
+                price: 3500,
+                originalPrice: 4200,
+                tag: 'SNEAKERS DE LUJO',
+                description: 'Tenis Golden Goose Stardan de diseño inspirado en el básquetbol de los 90 con acabado artesanal exclusivo.',
+                image: 'stardan.jpg',
+                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
+                cleanWhiteBg: true,
+                sizes: ['26', '27', '28', '29']
+            },
+            {
+                id: 5,
                 name: 'Playera Essentials',
                 category: 'playeras',
                 price: 1000,
@@ -471,7 +549,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 2,
+                id: 6,
                 name: 'Birkenstock Arizona',
                 category: 'calzado',
                 price: 2600,
@@ -483,7 +561,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 3,
+                id: 7,
                 name: 'Hoodie Essentials',
                 category: 'hoodies',
                 price: 1800,
@@ -495,7 +573,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 4,
+                id: 8,
                 name: 'Sueter Alo',
                 category: 'sudaderas',
                 price: 2499,
@@ -508,7 +586,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 5,
+                id: 9,
                 name: 'Dolce & Gabbana Portofino',
                 category: 'calzado',
                 price: 3200,
@@ -520,7 +598,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 6,
+                id: 10,
                 name: 'Playera Off-White',
                 category: 'playeras',
                 price: 1500,
@@ -532,7 +610,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 7,
+                id: 11,
                 name: 'Tenis Veja',
                 category: 'calzado',
                 price: 2800,
@@ -544,7 +622,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 8,
+                id: 12,
                 name: 'Birkenstock Boston',
                 category: 'calzado',
                 price: 2700,
@@ -556,7 +634,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 9,
+                id: 13,
                 name: 'Sueter Alo Zipper',
                 category: 'sudaderas',
                 price: 3000,
@@ -568,7 +646,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 10,
+                id: 14,
                 name: 'Hoodie Alo',
                 category: 'hoodies',
                 price: 3000,
@@ -580,7 +658,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 11,
+                id: 15,
                 name: 'Tenis Valentino Open Royco',
                 category: 'calzado',
                 price: 3000,
@@ -592,7 +670,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 12,
+                id: 16,
                 name: 'Playera All Saints',
                 category: 'playeras',
                 price: 1500,
@@ -604,7 +682,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 13,
+                id: 17,
                 name: 'Tenis Coach High Line',
                 category: 'calzado',
                 price: 2900,
@@ -616,7 +694,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 14,
+                id: 18,
                 name: 'Playera All Saints London',
                 category: 'playeras',
                 price: 1500,
@@ -628,7 +706,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 15,
+                id: 19,
                 name: 'Sueter Ralph Lauren',
                 category: 'sudaderas',
                 price: 3000,
@@ -640,7 +718,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 16,
+                id: 20,
                 name: 'Tenis Golden Goose',
                 category: 'calzado',
                 price: 3000,
@@ -652,7 +730,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 17,
+                id: 21,
                 name: 'Hoodie Amiri',
                 category: 'hoodies',
                 price: 3000,
@@ -664,7 +742,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 18,
+                id: 22,
                 name: 'Tenis Amiri con plataforma y parche de estrella',
                 category: 'calzado',
                 price: 3000,
@@ -676,7 +754,7 @@
                 sizes: ['26', '27', '28', '29']
             },
             {
-                id: 19,
+                id: 23,
                 name: 'Short Essentials',
                 category: 'shorts',
                 price: 1200,
@@ -688,9 +766,10 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 20,
+                id: 24,
                 name: 'Pants Alo',
                 category: 'sudaderas',
+                sportItem: true,
                 price: 2200,
                 tag: 'CONFORT EXCLUSIVO',
                 description: 'Pantalón jogger/pants de alta gama con máxima suavidad, estilo urbano y ajuste ideal.',
@@ -700,9 +779,10 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 21,
+                id: 25,
                 name: 'Pants Alo',
                 category: 'sudaderas',
+                sportItem: true,
                 price: 2200,
                 tag: 'NUEVO INGRESO',
                 description: 'Pantalón jogger/pants alo exclusivo de máxima comodidad y diseño urbano.',
@@ -712,7 +792,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 22,
+                id: 26,
                 name: 'Hoodie Essentials Full Zip',
                 category: 'hoodies',
                 price: 2200,
@@ -724,7 +804,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 23,
+                id: 27,
                 name: 'Playera Essentials',
                 category: 'playeras',
                 price: 1000,
@@ -736,9 +816,10 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 24,
+                id: 28,
                 name: 'Chamarra The North Face',
                 category: 'hoodies',
+                sportItem: true,
                 price: 3200,
                 tag: 'EXTREME WEATHER',
                 description: 'Chamarra The North Face de alta gama para protección contra el frío y estilo urbano.',
@@ -748,7 +829,7 @@
                 sizes: ['S', 'M', 'L', 'XL']
             },
             {
-                id: 25,
+                id: 29,
                 name: 'Playera AllSaints',
                 category: 'playeras',
                 price: 1500,
@@ -761,7 +842,6 @@
             }
         ];
 
-        // Catálogo 2 (Sección Separada): Accesorios, Bolsas & Otros
         const extraProducts = [
             {
                 id: 101,
@@ -848,7 +928,6 @@
         const FREE_SHIPPING_THRESHOLD = 2999;
         const SHIPPING_COST = 250;
 
-        // Inicializar tallas / versiones
         [...products, ...extraProducts].forEach(p => {
             selectedSizes[p.id] = p.sizes[0];
         });
@@ -912,7 +991,6 @@
                         </div>
                     </div>
 
-                    <!-- Precio y Botón en la parte inferior de la tarjeta -->
                     <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 border-t border-primo-border mt-auto">
                         <div class="flex items-center justify-between mb-4">
                             <span class="text-xs text-zinc-400 uppercase font-medium">Precio:</span>
@@ -927,14 +1005,18 @@
             `;
         }
 
-        // Renderizado de Sección 1 (Ropa y Calzado)
         function renderCatalog() {
             const grid = document.getElementById('products-grid');
             const noResults = document.getElementById('no-results');
             const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
 
             const filtered = products.filter(product => {
-                const matchesCategory = currentCategory === 'todos' || product.category === currentCategory;
+                let matchesCategory = true;
+                if (currentCategory === 'deportes') {
+                    matchesCategory = product.sportItem === true;
+                } else if (currentCategory !== 'todos') {
+                    matchesCategory = product.category === currentCategory;
+                }
                 const matchesSearch = product.name.toLowerCase().includes(searchQuery) || product.description.toLowerCase().includes(searchQuery);
                 return matchesCategory && matchesSearch;
             });
@@ -947,10 +1029,10 @@
                 grid.innerHTML = filtered.map(product => renderProductCard(product)).join('');
             }
 
+            document.getElementById('total-count').textContent = products.length;
             lucide.createIcons();
         }
 
-        // Renderizado de Sección 2 (Accesorios, Bolsas & Otros)
         function renderExtras() {
             const grid = document.getElementById('extras-grid');
             const noResults = document.getElementById('no-extra-results');
@@ -1001,13 +1083,8 @@
             renderExtras();
         }
 
-        function filterCatalog() {
-            renderCatalog();
-        }
-
-        function filterExtras() {
-            renderExtras();
-        }
+        function filterCatalog() { renderCatalog(); }
+        function filterExtras() { renderExtras(); }
 
         function resetFilters() {
             document.getElementById('search-input').value = '';
@@ -1212,10 +1289,25 @@
             }, 3000);
         }
 
+        // IntersectionObserver para activar las animaciones de transición en la sección de accesorios
+        function initScrollAnimations() {
+            const revealElements = document.querySelectorAll('.section-reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => observer.observe(el));
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             renderCatalog();
             renderExtras();
             updateCartUI();
+            initScrollAnimations();
             lucide.createIcons();
         });
     </script>
