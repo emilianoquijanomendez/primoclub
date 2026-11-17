@@ -594,8 +594,44 @@
     <!-- Contenedor de Notificaciones Toast -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Lógica del Catálogo Conectado en JavaScript -->
-    <script>
+    <!-- Lógica del Catálogo Conectado a Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged,
+            updateProfile 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE (PRIMO CLUB)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3bASfQzfAfVFtLdmdZ8MuzcZ_MX2Mq8Q",
+            authDomain: "primo-club.firebaseapp.com",
+            projectId: "primo-club",
+            storageBucket: "primo-club.firebasestorage.app",
+            messagingSenderId: "29326272880",
+            appId: "1:29326272880:web:444bd72ada5f42dfaf87b5",
+            measurementId: "G-6GK95Q92GP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ==========================================
+        // CATÁLOGO DE PRODUCTOS
+        // ==========================================
         const products = [
             // --- PLAYERAS ---
             { id: 2, name: 'Playera Burberry', category: 'playeras', price: 5200, tag: 'LUJO EXCLUSIVO', description: 'Playera de diseño de alta costura Burberry con patrones icónicos y calidad prémium.', image: 'burberry.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
@@ -653,18 +689,21 @@
         let currentExtraCategory = 'todos';
         const FREE_SHIPPING_THRESHOLD = 2999;
         const SHIPPING_COST = 250;
-        const DISCOUNT_RATE = 0.05; // 5% de descuento
+        const DISCOUNT_RATE = 0.05;
 
         allCatalogItems.forEach(p => {
             selectedSizes[p.id] = p.sizes[0];
         });
 
         // ==========================================
-        // CONEXIÓN CON BASE DE DATOS COMPARTIDA Y PROMO 2 HORAS
+        // ESTADO DE SESIÓN Y SINCRONIZACIÓN NUBE
         // ==========================================
-        let usersDB = JSON.parse(localStorage.getItem('primo_users')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('primo_current_user')) || null;
+        let currentUser = null;
         let promoInterval = null;
+
+        let cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+        let orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
 
         function hasActivePromo() {
             return Boolean(currentUser && currentUser.discountExpiresAt && currentUser.discountExpiresAt > Date.now());
@@ -672,6 +711,161 @@
 
         function getDiscountedPrice(price) {
             return hasActivePromo() ? Math.round(price * (1 - DISCOUNT_RATE)) : price;
+        }
+
+        async function saveUserCloudData() {
+            if (currentUser && currentUser.uid) {
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), {
+                        name: currentUser.name,
+                        email: currentUser.email,
+                        discountExpiresAt: currentUser.discountExpiresAt || 0,
+                        cart: cart,
+                        wishlist: wishlist,
+                        orders: orders
+                    }, { merge: true });
+                } catch (err) {
+                    console.error("Error sincronizando con Firebase:", err);
+                }
+            } else {
+                localStorage.setItem('primo_guest_cart', JSON.stringify(cart));
+                localStorage.setItem('primo_guest_wishlist', JSON.stringify(wishlist));
+                localStorage.setItem('primo_guest_orders', JSON.stringify(orders));
+            }
+        }
+
+        function saveCart() { saveUserCloudData(); }
+        function saveWishlist() { saveUserCloudData(); }
+        function saveOrders() { saveUserCloudData(); }
+
+        onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                const userRef = doc(db, "users", firebaseUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                const guestCart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+                const guestWishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+                const guestOrders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
+
+                if (userSnap.exists()) {
+                    const data = userSnap.data();
+                    currentUser = {
+                        uid: firebaseUser.uid,
+                        name: data.name || firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        discountExpiresAt: data.discountExpiresAt || 0
+                    };
+
+                    const cloudCart = data.cart || [];
+                    guestCart.forEach(gItem => {
+                        const existing = cloudCart.find(cItem => cItem.cartKey === gItem.cartKey);
+                        if (existing) existing.quantity += gItem.quantity;
+                        else cloudCart.push(gItem);
+                    });
+
+                    const cloudWishlist = data.wishlist || [];
+                    guestWishlist.forEach(id => { if (!cloudWishlist.includes(id)) cloudWishlist.push(id); });
+
+                    const cloudOrders = data.orders || [];
+                    guestOrders.forEach(gOrd => { if (!cloudOrders.some(cOrd => cOrd.id === gOrd.id)) cloudOrders.unshift(gOrd); });
+
+                    cart = cloudCart;
+                    wishlist = cloudWishlist;
+                    orders = cloudOrders;
+                } else {
+                    currentUser = {
+                        uid: firebaseUser.uid,
+                        name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        discountExpiresAt: 0
+                    };
+                    cart = guestCart;
+                    wishlist = guestWishlist;
+                    orders = guestOrders;
+                }
+
+                localStorage.removeItem('primo_guest_cart');
+                localStorage.removeItem('primo_guest_wishlist');
+                localStorage.removeItem('primo_guest_orders');
+                await saveUserCloudData();
+            } else {
+                currentUser = null;
+                cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+                wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+                orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
+            }
+
+            startPromoTimer();
+            updateAuthUI();
+            renderCatalog();
+            renderExtras();
+            updateCartUI();
+            updateWishlistBadge();
+            updateWishlistDrawerUI();
+            updateOrdersDrawerUI();
+        });
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+
+                const discountExpiresAt = Date.now() + (2 * 60 * 60 * 1000);
+                currentUser = {
+                    uid: userCredential.user.uid,
+                    name,
+                    email,
+                    discountExpiresAt
+                };
+
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    name,
+                    email,
+                    discountExpiresAt,
+                    cart,
+                    wishlist,
+                    orders
+                });
+
+                closeAuthModal();
+                showToast(`¡Bienvenido ${name}! 5% OFF activado por 2 horas 🎉`);
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    showToast('Este correo ya tiene una cuenta. Inicia sesión.');
+                    switchAuthTab('login');
+                } else if (error.code === 'auth/weak-password') {
+                    showToast('La contraseña debe tener al menos 6 caracteres.');
+                } else {
+                    showToast('Error al registrar: ' + error.message);
+                }
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                closeAuthModal();
+                showToast(`Sesión iniciada: ${userCredential.user.displayName || email}`);
+            } catch (error) {
+                showToast('Correo o contraseña incorrectos.');
+            }
+        }
+
+        async function handleLogout() {
+            await signOut(auth);
+            document.getElementById('cart-drawer').classList.add('hidden');
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
+            showToast('Sesión cerrada.');
         }
 
         function startPromoTimer() {
@@ -704,32 +898,6 @@
             if (hasActivePromo()) {
                 promoInterval = setInterval(updateTimer, 1000);
             }
-        }
-
-        function getUserCartKey() {
-            return currentUser ? `primo_cart_${currentUser.email}` : 'primo_guest_cart';
-        }
-        function getUserWishlistKey() {
-            return currentUser ? `primo_wishlist_${currentUser.email}` : 'primo_guest_wishlist';
-        }
-        function getUserOrdersKey() {
-            return currentUser ? `primo_orders_${currentUser.email}` : 'primo_guest_orders';
-        }
-
-        let cart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
-        let wishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
-        let orders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
-
-        function saveCart() {
-            localStorage.setItem(getUserCartKey(), JSON.stringify(cart));
-        }
-
-        function saveWishlist() {
-            localStorage.setItem(getUserWishlistKey(), JSON.stringify(wishlist));
-        }
-
-        function saveOrders() {
-            localStorage.setItem(getUserOrdersKey(), JSON.stringify(orders));
         }
 
         function updateAuthUI() {
@@ -862,127 +1030,6 @@
                 btnRegister.className = "flex-1 text-white font-bold pb-3 border-b-2 border-white transition";
                 btnLogin.className = "flex-1 text-zinc-500 hover:text-zinc-300 font-bold pb-3 border-b-2 border-transparent transition";
             }
-        }
-
-        function syncUserDataOnLogin() {
-            const guestCart = [...cart];
-            const guestWishlist = [...wishlist];
-            const guestOrders = [...orders];
-
-            const savedCart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
-            const savedWishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
-            const savedOrders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
-
-            guestCart.forEach(gItem => {
-                const existing = savedCart.find(sItem => sItem.cartKey === gItem.cartKey);
-                if (existing) {
-                    existing.quantity += gItem.quantity;
-                } else {
-                    savedCart.push(gItem);
-                }
-            });
-
-            guestWishlist.forEach(gId => {
-                if (!savedWishlist.includes(gId)) {
-                    savedWishlist.push(gId);
-                }
-            });
-
-            guestOrders.forEach(gOrder => {
-                if (!savedOrders.some(sOrder => sOrder.id === gOrder.id)) {
-                    savedOrders.unshift(gOrder);
-                }
-            });
-
-            localStorage.removeItem('primo_guest_cart');
-            localStorage.removeItem('primo_guest_wishlist');
-            localStorage.removeItem('primo_guest_orders');
-
-            cart = savedCart;
-            wishlist = savedWishlist;
-            orders = savedOrders;
-            saveCart();
-            saveWishlist();
-            saveOrders();
-
-            startPromoTimer();
-            updateCartUI();
-            updateWishlistBadge();
-            updateWishlistDrawerUI();
-            updateOrdersDrawerUI();
-            renderCatalog();
-            renderExtras();
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value.trim().toLowerCase();
-            const password = document.getElementById('reg-password').value;
-
-            const exists = usersDB.find(u => u.email.toLowerCase() === email);
-            if (exists) {
-                showToast('Este correo ya está registrado.');
-                return;
-            }
-
-            // Activar 5% de descuento por 2 horas (7,200,000 ms)
-            const discountExpiresAt = Date.now() + (2 * 60 * 60 * 1000);
-            const newUser = { name, email, password, discountExpiresAt };
-
-            usersDB.push(newUser);
-            localStorage.setItem('primo_users', JSON.stringify(usersDB));
-
-            currentUser = newUser;
-            localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
-
-            syncUserDataOnLogin();
-            updateAuthUI();
-            closeAuthModal();
-            showToast(`¡Bienvenido ${name}! 5% OFF activado por 2 horas 🎉`);
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
-
-            const user = usersDB.find(u => u.email.toLowerCase() === email && u.password === password);
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
-                
-                syncUserDataOnLogin();
-                updateAuthUI();
-                closeAuthModal();
-                showToast(`Sesión iniciada: ${user.name}`);
-            } else {
-                showToast('Correo o contraseña incorrectos.');
-            }
-        }
-
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('primo_current_user');
-
-            cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
-            wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
-            orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
-            
-            document.getElementById('cart-drawer').classList.add('hidden');
-            document.getElementById('wishlist-drawer').classList.add('hidden');
-            document.getElementById('orders-drawer').classList.add('hidden');
-
-            startPromoTimer();
-            updateAuthUI();
-            updateCartUI();
-            updateWishlistBadge();
-            updateWishlistDrawerUI();
-            updateOrdersDrawerUI();
-            renderCatalog();
-            renderExtras();
-
-            showToast('Sesión cerrada. Tu carrito y pedidos están guardados.');
         }
 
         function toggleUserMenu() {
@@ -1667,8 +1714,39 @@
             revealElements.forEach(el => observer.observe(el));
         }
 
+        // ==========================================
+        // EXPONER FUNCIONES GLOBALES PARA LOS BOTONES HTML
+        // ==========================================
+        Object.assign(window, {
+            openAuthModal,
+            closeAuthModal,
+            switchAuthTab,
+            handleRegister,
+            handleLogin,
+            handleLogout,
+            toggleUserMenu,
+            toggleOrdersDrawer,
+            toggleWishlistItem,
+            toggleWishlistDrawer,
+            goToProduct,
+            inquireModelWhatsApp,
+            setCategory,
+            setExtraCategory,
+            filterCatalog,
+            filterExtras,
+            resetFilters,
+            resetExtraFilters,
+            selectSize,
+            addToCart,
+            updateQuantity,
+            checkoutWhatsApp,
+            toggleCart,
+            closeMobileMenu,
+            openSizeGuide,
+            closeSizeGuide
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
-            startPromoTimer();
             updateAuthUI();
             renderCatalog();
             renderExtras();

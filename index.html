@@ -678,8 +678,44 @@
     <!-- Contenedor de Notificaciones Toast -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Lógica de la Tienda en JavaScript -->
-    <script>
+    <!-- Lógica de la Tienda Conectada a Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword, 
+            signOut, 
+            onAuthStateChanged,
+            updateProfile 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            setDoc, 
+            getDoc 
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+        // ==========================================
+        // CONFIGURACIÓN DE FIREBASE (PRIMO CLUB)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3bASfQzfAfVFtLdmdZ8MuzcZ_MX2Mq8Q",
+            authDomain: "primo-club.firebaseapp.com",
+            projectId: "primo-club",
+            storageBucket: "primo-club.firebasestorage.app",
+            messagingSenderId: "29326272880",
+            appId: "1:29326272880:web:444bd72ada5f42dfaf87b5",
+            measurementId: "G-6GK95Q92GP"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ==========================================
+        // PRODUCTOS DESTACADOS
+        // ==========================================
         const products = [
             {
                 id: 1,
@@ -734,18 +770,19 @@
         let selectedSizes = {};
         const FREE_SHIPPING_THRESHOLD = 2999;
         const SHIPPING_COST = 250;
-        const DISCOUNT_RATE = 0.05; // 5% de descuento
+        const DISCOUNT_RATE = 0.05;
 
-        products.forEach(p => {
-            selectedSizes[p.id] = p.sizes[0];
-        });
+        products.forEach(p => { selectedSizes[p.id] = p.sizes[0]; });
 
         // ==========================================
-        // GESTIÓN DE USUARIOS, CARRITO, DESEADOS Y PROMO 2 HORAS
+        // ESTADO DE SESIÓN Y SINCRONIZACIÓN NUBE
         // ==========================================
-        let usersDB = JSON.parse(localStorage.getItem('primo_users')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('primo_current_user')) || null;
+        let currentUser = null;
         let promoInterval = null;
+
+        let cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+        let wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+        let orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
 
         function hasActivePromo() {
             return Boolean(currentUser && currentUser.discountExpiresAt && currentUser.discountExpiresAt > Date.now());
@@ -753,6 +790,160 @@
 
         function getDiscountedPrice(price) {
             return hasActivePromo() ? Math.round(price * (1 - DISCOUNT_RATE)) : price;
+        }
+
+        async function saveUserCloudData() {
+            if (currentUser && currentUser.uid) {
+                try {
+                    await setDoc(doc(db, "users", currentUser.uid), {
+                        name: currentUser.name,
+                        email: currentUser.email,
+                        discountExpiresAt: currentUser.discountExpiresAt || 0,
+                        cart: cart,
+                        wishlist: wishlist,
+                        orders: orders
+                    }, { merge: true });
+                } catch (err) {
+                    console.error("Error sincronizando con Firebase:", err);
+                }
+            } else {
+                localStorage.setItem('primo_guest_cart', JSON.stringify(cart));
+                localStorage.setItem('primo_guest_wishlist', JSON.stringify(wishlist));
+                localStorage.setItem('primo_guest_orders', JSON.stringify(orders));
+            }
+        }
+
+        function saveCart() { saveUserCloudData(); }
+        function saveWishlist() { saveUserCloudData(); }
+        function saveOrders() { saveUserCloudData(); }
+
+        onAuthStateChanged(auth, async (firebaseUser) => {
+            if (firebaseUser) {
+                const userRef = doc(db, "users", firebaseUser.uid);
+                const userSnap = await getDoc(userRef);
+
+                const guestCart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+                const guestWishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+                const guestOrders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
+
+                if (userSnap.exists()) {
+                    const data = userSnap.data();
+                    currentUser = {
+                        uid: firebaseUser.uid,
+                        name: data.name || firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        discountExpiresAt: data.discountExpiresAt || 0
+                    };
+
+                    const cloudCart = data.cart || [];
+                    guestCart.forEach(gItem => {
+                        const existing = cloudCart.find(cItem => cItem.cartKey === gItem.cartKey);
+                        if (existing) existing.quantity += gItem.quantity;
+                        else cloudCart.push(gItem);
+                    });
+
+                    const cloudWishlist = data.wishlist || [];
+                    guestWishlist.forEach(id => { if (!cloudWishlist.includes(id)) cloudWishlist.push(id); });
+
+                    const cloudOrders = data.orders || [];
+                    guestOrders.forEach(gOrd => { if (!cloudOrders.some(cOrd => cOrd.id === gOrd.id)) cloudOrders.unshift(gOrd); });
+
+                    cart = cloudCart;
+                    wishlist = cloudWishlist;
+                    orders = cloudOrders;
+                } else {
+                    currentUser = {
+                        uid: firebaseUser.uid,
+                        name: firebaseUser.displayName || firebaseUser.email.split('@')[0],
+                        email: firebaseUser.email,
+                        discountExpiresAt: 0
+                    };
+                    cart = guestCart;
+                    wishlist = guestWishlist;
+                    orders = guestOrders;
+                }
+
+                localStorage.removeItem('primo_guest_cart');
+                localStorage.removeItem('primo_guest_wishlist');
+                localStorage.removeItem('primo_guest_orders');
+                await saveUserCloudData();
+            } else {
+                currentUser = null;
+                cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+                wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+                orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
+            }
+
+            startPromoTimer();
+            updateAuthUI();
+            renderFeaturedProducts();
+            updateCartUI();
+            updateWishlistBadge();
+            updateWishlistDrawerUI();
+            updateOrdersDrawerUI();
+        });
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(userCredential.user, { displayName: name });
+
+                const discountExpiresAt = Date.now() + (2 * 60 * 60 * 1000);
+                currentUser = {
+                    uid: userCredential.user.uid,
+                    name,
+                    email,
+                    discountExpiresAt
+                };
+
+                await setDoc(doc(db, "users", userCredential.user.uid), {
+                    name,
+                    email,
+                    discountExpiresAt,
+                    cart,
+                    wishlist,
+                    orders
+                });
+
+                closeAuthModal();
+                showToast(`¡Bienvenido ${name}! 5% OFF activado por 2 horas 🎉`);
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    showToast('Este correo ya tiene una cuenta. Inicia sesión.');
+                    switchAuthTab('login');
+                } else if (error.code === 'auth/weak-password') {
+                    showToast('La contraseña debe tener al menos 6 caracteres.');
+                } else {
+                    showToast('Error al registrar: ' + error.message);
+                }
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                closeAuthModal();
+                showToast(`Sesión iniciada: ${userCredential.user.displayName || email}`);
+            } catch (error) {
+                showToast('Correo o contraseña incorrectos.');
+            }
+        }
+
+        async function handleLogout() {
+            await signOut(auth);
+            document.getElementById('cart-drawer').classList.add('hidden');
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
+            showToast('Sesión cerrada.');
         }
 
         function startPromoTimer() {
@@ -787,32 +978,6 @@
             if (hasActivePromo()) {
                 promoInterval = setInterval(updateTimer, 1000);
             }
-        }
-
-        function getUserCartKey() {
-            return currentUser ? `primo_cart_${currentUser.email}` : 'primo_guest_cart';
-        }
-        function getUserWishlistKey() {
-            return currentUser ? `primo_wishlist_${currentUser.email}` : 'primo_guest_wishlist';
-        }
-        function getUserOrdersKey() {
-            return currentUser ? `primo_orders_${currentUser.email}` : 'primo_guest_orders';
-        }
-
-        let cart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
-        let wishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
-        let orders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
-
-        function saveCart() {
-            localStorage.setItem(getUserCartKey(), JSON.stringify(cart));
-        }
-
-        function saveWishlist() {
-            localStorage.setItem(getUserWishlistKey(), JSON.stringify(wishlist));
-        }
-
-        function saveOrders() {
-            localStorage.setItem(getUserOrdersKey(), JSON.stringify(orders));
         }
 
         function updateAuthUI() {
@@ -908,7 +1073,6 @@
                     </div>
                 `;
             }
-            
             lucide.createIcons();
         }
 
@@ -947,128 +1111,6 @@
             }
         }
 
-        function syncUserDataOnLogin() {
-            const guestCart = [...cart];
-            const guestWishlist = [...wishlist];
-            const guestOrders = [...orders];
-
-            const savedCart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
-            const savedWishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
-            const savedOrders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
-
-            guestCart.forEach(gItem => {
-                const existing = savedCart.find(sItem => sItem.cartKey === gItem.cartKey);
-                if (existing) {
-                    existing.quantity += gItem.quantity;
-                } else {
-                    savedCart.push(gItem);
-                }
-            });
-
-            guestWishlist.forEach(gId => {
-                if (!savedWishlist.includes(gId)) {
-                    savedWishlist.push(gId);
-                }
-            });
-
-            guestOrders.forEach(gOrder => {
-                if (!savedOrders.some(sOrder => sOrder.id === gOrder.id)) {
-                    savedOrders.unshift(gOrder);
-                }
-            });
-
-            localStorage.removeItem('primo_guest_cart');
-            localStorage.removeItem('primo_guest_wishlist');
-            localStorage.removeItem('primo_guest_orders');
-
-            cart = savedCart;
-            wishlist = savedWishlist;
-            orders = savedOrders;
-            saveCart();
-            saveWishlist();
-            saveOrders();
-
-            startPromoTimer();
-            updateCartUI();
-            updateWishlistBadge();
-            updateWishlistDrawerUI();
-            updateOrdersDrawerUI();
-            renderFeaturedProducts();
-        }
-
-        function handleRegister(e) {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = document.getElementById('reg-email').value.trim().toLowerCase();
-            const password = document.getElementById('reg-password').value;
-
-            const exists = usersDB.find(u => u.email.toLowerCase() === email);
-            if (exists) {
-                showToast('Este correo ya está registrado.');
-                return;
-            }
-
-            // Activar 5% de descuento por 2 horas (7,200,000 ms)
-            const discountExpiresAt = Date.now() + (2 * 60 * 60 * 1000);
-            const newUser = { name, email, password, discountExpiresAt };
-            
-            usersDB.push(newUser);
-            localStorage.setItem('primo_users', JSON.stringify(usersDB));
-
-            currentUser = newUser;
-            localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
-
-            syncUserDataOnLogin();
-            updateAuthUI();
-            closeAuthModal();
-            showToast(`¡Bienvenido ${name}! 5% OFF activado por 2 horas 🎉`);
-        }
-
-        function handleLogin(e) {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value.trim().toLowerCase();
-            const password = document.getElementById('login-password').value;
-
-            const user = usersDB.find(u => u.email.toLowerCase() === email && u.password === password);
-            if (user) {
-                currentUser = user;
-                localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
-                
-                syncUserDataOnLogin();
-                updateAuthUI();
-                closeAuthModal();
-                showToast(`Sesión iniciada: ${user.name}`);
-            } else {
-                showToast('Correo o contraseña incorrectos.');
-            }
-        }
-
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('primo_current_user');
-
-            cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
-            wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
-            orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
-            
-            document.getElementById('cart-drawer').classList.add('hidden');
-            document.getElementById('wishlist-drawer').classList.add('hidden');
-            document.getElementById('orders-drawer').classList.add('hidden');
-
-            startPromoTimer();
-            updateAuthUI();
-            updateCartUI();
-            updateWishlistBadge();
-            updateWishlistDrawerUI();
-            updateOrdersDrawerUI();
-            renderFeaturedProducts();
-
-            showToast('Sesión cerrada. Tu carrito y pedidos están guardados.');
-        }
-
-        // ==========================================
-        // LÓGICA DEL MENÚ DE USUARIO DROP-DOWN
-        // ==========================================
         function toggleUserMenu() {
             const dropdown = document.getElementById('user-dropdown');
             if (dropdown) {
@@ -1088,17 +1130,12 @@
             }
         });
 
-        // ==========================================
-        // LÓGICA DE MIS PEDIDOS
-        // ==========================================
         function toggleOrdersDrawer() {
             document.getElementById('cart-drawer').classList.add('hidden');
             document.getElementById('wishlist-drawer').classList.add('hidden');
             const drawer = document.getElementById('orders-drawer');
             drawer.classList.toggle('hidden');
-            if (!drawer.classList.contains('hidden')) {
-                updateOrdersDrawerUI();
-            }
+            if (!drawer.classList.contains('hidden')) updateOrdersDrawerUI();
         }
 
         function updateOrdersDrawerUI() {
@@ -1133,7 +1170,6 @@
                             ${order.status}
                         </span>
                     </div>
-
                     <div class="space-y-2.5">
                         ${order.items.map(item => `
                             <div class="flex items-center gap-3">
@@ -1146,20 +1182,15 @@
                             </div>
                         `).join('')}
                     </div>
-
                     <div class="pt-2.5 border-t border-zinc-800 flex items-center justify-between text-xs">
                         <span class="text-zinc-400">Envío: <strong class="text-white">${order.shipping}</strong></span>
                         <span class="font-display font-bold text-sm text-white glow-white">Total: $${order.total.toLocaleString('es-MX')} MXN</span>
                     </div>
                 </div>
             `).join('');
-
             lucide.createIcons();
         }
 
-        // ==========================================
-        // LÓGICA DE DESEADOS Y PANEL LATERAL
-        // ==========================================
         function toggleWishlistItem(productId) {
             const index = wishlist.indexOf(productId);
             if (index > -1) {
@@ -1169,32 +1200,23 @@
                 wishlist.push(productId);
                 showToast('Agregado a deseados 🤍');
             }
-            
             saveWishlist();
             updateWishlistBadge();
             updateWishlistDrawerUI();
-            
-            if (typeof renderFeaturedProducts === 'function') {
-                renderFeaturedProducts();
-            }
+            renderFeaturedProducts();
         }
 
         function updateWishlistBadge() {
             const badge = document.getElementById('wishlist-badge');
-            if (badge) {
-                badge.textContent = wishlist.length;
-            }
+            if (badge) badge.textContent = wishlist.length;
         }
 
         function toggleWishlistDrawer() {
             document.getElementById('cart-drawer').classList.add('hidden');
             document.getElementById('orders-drawer').classList.add('hidden');
-            
             const drawer = document.getElementById('wishlist-drawer');
             drawer.classList.toggle('hidden');
-            if(!drawer.classList.contains('hidden')) {
-                updateWishlistDrawerUI();
-            }
+            if (!drawer.classList.contains('hidden')) updateWishlistDrawerUI();
         }
 
         function updateWishlistDrawerUI() {
@@ -1243,7 +1265,6 @@
                     </div>
                 `;
             }).join('');
-
             lucide.createIcons();
         }
 
@@ -1254,23 +1275,16 @@
                 card.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 setTimeout(() => {
                     card.classList.add('highlight-product');
-                    setTimeout(() => {
-                        card.classList.remove('highlight-product');
-                    }, 2000);
+                    setTimeout(() => card.classList.remove('highlight-product'), 2000);
                 }, 300); 
             }
         }
 
-        // ==========================================
-        // LÓGICA DE TRANSICIONES Y SCROLL
-        // ==========================================
         function initPageTransitions() {
             const curtain = document.getElementById('page-transition');
             const wrapper = document.getElementById('page-wrapper');
 
-            requestAnimationFrame(() => {
-                curtain.classList.add('loaded');
-            });
+            requestAnimationFrame(() => curtain.classList.add('loaded'));
 
             window.addEventListener('pageshow', (event) => {
                 if (event.persisted) {
@@ -1284,16 +1298,12 @@
                 link.addEventListener('click', (e) => {
                     const href = link.getAttribute('href');
                     if (!href || href.startsWith('#') || link.target === '_blank') return;
-
                     e.preventDefault();
                     closeMobileMenu();
                     curtain.classList.remove('loaded');
                     curtain.classList.add('leaving');
                     wrapper.classList.add('leaving');
-
-                    setTimeout(() => {
-                        window.location.href = href;
-                    }, 480);
+                    setTimeout(() => { window.location.href = href; }, 480);
                 });
             });
         }
@@ -1301,11 +1311,8 @@
         function initScrollAnimations() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('active');
-                    } else {
-                        entry.target.classList.remove('active');
-                    }
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                    else entry.target.classList.remove('active');
                 });
             }, { threshold: 0.12, rootMargin: "0px 0px -40px 0px" });
 
@@ -1326,9 +1333,7 @@
             }, { passive: true });
         }
 
-        function scrollToTop() {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
 
         let globalObserver;
 
@@ -1376,20 +1381,13 @@
                                 <span class="absolute top-4 left-4 px-3.5 py-1 rounded-full bg-black/80 backdrop-blur-md border border-zinc-700 text-white text-[10px] font-bold uppercase tracking-wider">
                                     ${product.tag}
                                 </span>
-                                
                                 <button onclick="toggleWishlistItem(${product.id})" class="absolute top-4 right-4 p-2 rounded-full bg-black/80 backdrop-blur-md border border-zinc-700 hover:border-white transition-all z-20 group">
                                     <i data-lucide="heart" class="w-4 h-4 ${heartColor} group-hover:fill-white transition-colors"></i>
                                 </button>
                             </div>
-
                             <div class="p-6 pb-4">
-                                <h3 class="font-display font-bold text-xl text-white leading-snug mb-2">
-                                    ${product.name}
-                                </h3>
-                                <p class="text-xs text-primo-muted leading-relaxed mb-5">
-                                    ${product.description}
-                                </p>
-
+                                <h3 class="font-display font-bold text-xl text-white leading-snug mb-2">${product.name}</h3>
+                                <p class="text-xs text-primo-muted leading-relaxed mb-5">${product.description}</p>
                                 <div class="mb-4">
                                     <div class="flex items-center justify-between mb-2">
                                         <span class="text-xs font-semibold text-zinc-400">Seleccionar Talla:</span>
@@ -1411,7 +1409,6 @@
                                 </div>
                             </div>
                         </div>
-
                         <div class="px-6 pb-6 pt-3.5 border-t border-primo-border mt-auto">
                             <div class="flex items-end justify-between gap-2 mb-4">
                                 <span class="text-[11px] text-zinc-400 uppercase font-semibold tracking-wider pb-0.5">Precio</span>
@@ -1427,7 +1424,6 @@
             }).join('');
 
             lucide.createIcons();
-
             if (globalObserver) {
                 document.querySelectorAll('#products-grid .reveal').forEach(el => globalObserver.observe(el));
             }
@@ -1461,11 +1457,9 @@
 
             saveCart();
             updateCartUI();
-            
             document.getElementById('wishlist-drawer').classList.add('hidden');
             document.getElementById('orders-drawer').classList.add('hidden');
             document.getElementById('cart-drawer').classList.remove('hidden');
-            
             showToast(`Agregado: ${product.name} (Talla ${size})`);
         }
 
@@ -1473,9 +1467,7 @@
             const itemIndex = cart.findIndex(item => item.cartKey === cartKey);
             if (itemIndex > -1) {
                 cart[itemIndex].quantity += delta;
-                if (cart[itemIndex].quantity <= 0) {
-                    cart.splice(itemIndex, 1);
-                }
+                if (cart[itemIndex].quantity <= 0) cart.splice(itemIndex, 1);
                 saveCart();
                 updateCartUI();
             }
@@ -1576,7 +1568,6 @@
                     </div>
                 </div>
             `).join('');
-
             lucide.createIcons();
         }
 
@@ -1630,8 +1621,7 @@
         function toggleCart() {
             document.getElementById('wishlist-drawer').classList.add('hidden');
             document.getElementById('orders-drawer').classList.add('hidden');
-            const drawer = document.getElementById('cart-drawer');
-            drawer.classList.toggle('hidden');
+            document.getElementById('cart-drawer').classList.toggle('hidden');
         }
 
         document.getElementById('mobile-menu-btn').addEventListener('click', () => {
@@ -1665,9 +1655,7 @@
             container.appendChild(toast);
             lucide.createIcons();
 
-            requestAnimationFrame(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            });
+            requestAnimationFrame(() => toast.classList.remove('translate-y-2', 'opacity-0'));
 
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-2');
@@ -1675,11 +1663,33 @@
             }, 3000);
         }
 
+        Object.assign(window, {
+            openAuthModal,
+            closeAuthModal,
+            switchAuthTab,
+            handleRegister,
+            handleLogin,
+            handleLogout,
+            toggleUserMenu,
+            toggleOrdersDrawer,
+            toggleWishlistItem,
+            toggleWishlistDrawer,
+            goToProduct,
+            selectSize,
+            addToCart,
+            updateQuantity,
+            checkoutWhatsApp,
+            toggleCart,
+            closeMobileMenu,
+            openSizeGuide,
+            closeSizeGuide,
+            scrollToTop
+        });
+
         window.addEventListener('DOMContentLoaded', () => {
             initPageTransitions();
             globalObserver = initScrollAnimations();
             initScrollTopButton();
-            startPromoTimer();
             updateAuthUI();
             renderFeaturedProducts();
             updateCartUI();
