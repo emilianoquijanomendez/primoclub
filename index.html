@@ -190,9 +190,10 @@
     </div>
 
     <div id="page-wrapper">
+        <!-- Cintillo Superior (Responsivo para celular sin encimarse) -->
         <div class="bg-white text-black text-[11px] sm:text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden border-b border-zinc-200">
-            <div class="flex w-[200%] animate-marquee">
-                <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
+            <div class="flex w-max animate-marquee">
+                <div class="flex items-center gap-6 px-3 whitespace-nowrap shrink-0">
                     <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
                     <span>•</span>
                     <span>🎁 REGÍSTRATE Y OBTÉN 5% OFF POR 2 HORAS</span>
@@ -200,7 +201,7 @@
                     <span>100% PRODUCTOS ORIGINALES</span>
                     <span>•</span>
                 </div>
-                <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
+                <div class="flex items-center gap-6 px-3 whitespace-nowrap shrink-0">
                     <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
                     <span>•</span>
                     <span>🎁 REGÍSTRATE Y OBTÉN 5% OFF POR 2 HORAS</span>
@@ -1350,14 +1351,20 @@
                 const discountedPrice = getDiscountedPrice(product.price);
 
                 const priceDisplay = promoActive
-                    ? `<div class="flex flex-col items-end">
-                        <span class="text-xs text-zinc-500 line-through">$${product.price.toLocaleString('es-MX')} MXN</span>
-                        <div class="flex items-center gap-1.5">
-                            <span class="px-1.5 py-0.5 rounded bg-white text-black text-[9px] font-extrabold">-5%</span>
-                            <span class="font-display font-extrabold text-white text-lg glow-white">$${discountedPrice.toLocaleString('es-MX')} MXN</span>
+                    ? `<div class="flex flex-col items-end text-right">
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="px-1.5 py-0.5 rounded bg-white text-black text-[9px] font-extrabold tracking-wider uppercase">-5%</span>
+                            <span class="text-xs text-zinc-500 line-through">$${product.price.toLocaleString('es-MX')}</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 whitespace-nowrap">
+                            <span class="font-display font-extrabold text-white text-lg sm:text-xl glow-white">$${discountedPrice.toLocaleString('es-MX')}</span>
+                            <span class="text-[10px] font-bold text-zinc-400 tracking-wider">MXN</span>
                         </div>
                        </div>`
-                    : `<span class="font-display font-extrabold text-white text-lg">$${product.price.toLocaleString('es-MX')} MXN</span>`;
+                    : `<div class="flex items-baseline gap-1 whitespace-nowrap">
+                        <span class="font-display font-extrabold text-white text-lg sm:text-xl">$${product.price.toLocaleString('es-MX')}</span>
+                        <span class="text-[10px] font-bold text-zinc-400 tracking-wider">MXN</span>
+                       </div>`;
 
                 const delayClass = index === 0 ? '' : `reveal-delay-${Math.min(index, 3)}`;
 
@@ -1405,9 +1412,9 @@
                             </div>
                         </div>
 
-                        <div class="px-6 pb-6 pt-3 border-t border-primo-border mt-auto">
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-xs text-zinc-400 uppercase font-medium">Precio</span>
+                        <div class="px-6 pb-6 pt-3.5 border-t border-primo-border mt-auto">
+                            <div class="flex items-end justify-between gap-2 mb-4">
+                                <span class="text-[11px] text-zinc-400 uppercase font-semibold tracking-wider pb-0.5">Precio</span>
                                 ${priceDisplay}
                             </div>
                             <button onclick="addToCart(${product.id})" class="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white active:scale-95">
