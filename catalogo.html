@@ -108,11 +108,27 @@
             -webkit-backdrop-filter: blur(14px);
         }
 
+        .product-card {
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .product-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px -10px rgba(255, 255, 255, 0.15);
+        }
         .product-card:hover .product-img {
             transform: scale(1.06);
         }
 
-        /* Transición exclusiva para la sección de accesorios */
+        .highlight-product {
+            animation: highlightPulse 2s ease-out;
+        }
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.8); border-color: white; transform: scale(1.02); }
+            50% { box-shadow: 0 0 40px 10px rgba(255,255,255,0); border-color: white; transform: scale(1.02); }
+            100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); transform: scale(1); }
+        }
+
         .section-reveal {
             opacity: 0;
             transform: translateY(40px);
@@ -128,25 +144,23 @@
 </head>
 <body class="antialiased selection:bg-white selection:text-black">
 
-    <!-- Cintillo Superior Animado Continuo y Sin Parpadeos -->
+    <!-- Cintillo Superior -->
     <div class="bg-white text-black text-[11px] sm:text-xs font-extrabold uppercase tracking-widest py-2.5 overflow-hidden border-b border-zinc-300">
         <div class="flex w-[200%] animate-marquee">
-            <!-- Bloque 1 -->
             <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
                 <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
                 <span>•</span>
-                <span>100% PRODUCTOS ORIGINALES</span>
+                <span>🎁 REGÍSTRATE Y OBTÉN 5% OFF POR 2 HORAS</span>
                 <span>•</span>
-                <span>ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+                <span>100% PRODUCTOS ORIGINALES</span>
                 <span>•</span>
             </div>
-            <!-- Bloque 2 (Duplicado exacto para bucle infinito) -->
             <div class="flex items-center justify-around w-1/2 whitespace-nowrap">
                 <span>✨ ENVÍO GRATIS EN COMPRAS MAYORES A $2,999 MXN</span>
                 <span>•</span>
-                <span>100% PRODUCTOS ORIGINALES</span>
+                <span>🎁 REGÍSTRATE Y OBTÉN 5% OFF POR 2 HORAS</span>
                 <span>•</span>
-                <span>ENVÍOS ASEGURADOS A TODO MÉXICO</span>
+                <span>100% PRODUCTOS ORIGINALES</span>
                 <span>•</span>
             </div>
         </div>
@@ -186,15 +200,27 @@
                 </nav>
 
                 <!-- Acciones Derecha -->
-                <div class="flex items-center gap-2 sm:gap-4">
-                    <button onclick="openSizeGuide()" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-primo-card hover:bg-zinc-800 border border-primo-border px-3.5 py-2.5 rounded-xl transition">
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="openSizeGuide()" class="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-primo-card hover:bg-zinc-800 border border-primo-border px-3.5 py-2.5 rounded-xl transition hover:scale-105 active:scale-95">
                         <i data-lucide="ruler" class="w-4 h-4 text-white"></i>
                         <span>Tallas</span>
                     </button>
 
-                    <button onclick="toggleCart()" aria-label="Ver carrito" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-zinc-600 text-white transition group">
-                        <i data-lucide="shopping-bag" class="w-5 h-5 text-white"></i>
-                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-white text-black text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.7)]">
+                    <!-- CONTENEDOR DE AUTENTICACIÓN CONECTADO (DINÁMICO) -->
+                    <div id="auth-desktop-container" class="relative"></div>
+
+                    <!-- Botón de Deseados -->
+                    <button onclick="toggleWishlistDrawer()" aria-label="Ver deseados" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-white text-white transition group hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        <i data-lucide="heart" class="w-5 h-5 text-white group-hover:fill-white transition-colors"></i>
+                        <span id="wishlist-badge" class="absolute -top-1.5 -right-1.5 bg-white text-black text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.8)] transition-transform duration-300">
+                            0
+                        </span>
+                    </button>
+
+                    <!-- Botón de Carrito -->
+                    <button onclick="toggleCart()" aria-label="Ver carrito" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-white text-white transition group hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        <i data-lucide="shopping-bag" class="w-5 h-5 text-white group-hover:animate-pulse"></i>
+                        <span id="cart-badge" class="absolute -top-1.5 -right-1.5 bg-white text-black text-xs font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.7)] transition-transform duration-300">
                             0
                         </span>
                     </button>
@@ -202,8 +228,19 @@
             </div>
         </div>
 
+        <!-- BANNER DE DESCUENTO ACTIVO (5% OFF POR 2 HORAS) -->
+        <div id="promo-countdown-banner" class="hidden bg-zinc-950 border-t border-zinc-800 py-2 px-4 text-center">
+            <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-center gap-2 text-xs">
+                <span class="px-2 py-0.5 rounded bg-white text-black font-extrabold uppercase tracking-wider">5% OFF ACTIVO</span>
+                <span class="text-zinc-300">Descuento de bienvenida en toda la tienda. Expira en:</span>
+                <span id="promo-timer-display" class="font-mono font-extrabold text-white text-sm glow-white">01:59:59</span>
+            </div>
+        </div>
+
         <!-- Menú Móvil Desplegable -->
         <div id="mobile-menu" class="hidden md:hidden bg-primo-dark border-b border-primo-border px-6 pt-4 pb-8 space-y-3 shadow-2xl">
+            <div id="auth-mobile-container" class="mb-2 border-b border-zinc-800 pb-3"></div>
+
             <a href="index.html" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Inicio</a>
             <a href="catalogo.html" class="block px-4 py-3 rounded-xl text-base font-medium text-white bg-primo-card transition">Catálogo Completo</a>
             <a href="index.html#esencia" class="block px-4 py-3 rounded-xl text-base font-medium text-zinc-200 hover:bg-primo-card hover:text-white transition">Nuestra Esencia</a>
@@ -243,7 +280,6 @@
 
     <!-- SECCIÓN 1: Ropa & Calzado -->
     <section class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Botones de Filtro por Categoría (Incluyendo Deportes) -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none" id="category-filters">
             <button onclick="setCategory('todos')" data-cat="todos" class="filter-btn active whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                 Todos (<span id="total-count">29</span>)
@@ -268,12 +304,8 @@
             </button>
         </div>
 
-        <!-- Grid de Productos -->
-        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <!-- Renderizado dinámico vía JavaScript -->
-        </div>
+        <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"></div>
 
-        <!-- Mensaje si no hay resultados -->
         <div id="no-results" class="hidden text-center py-20">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-primo-card border border-primo-border flex items-center justify-center text-primo-muted mb-4">
                 <i data-lucide="search-x" class="w-8 h-8"></i>
@@ -286,9 +318,8 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2 SEPARADA: Accesorios, Tecnología & Otros (Con Transición Exclusiva) -->
+    <!-- SECCIÓN 2 SEPARADA: Accesorios, Tecnología & Otros -->
     <section id="extras-section" class="section-reveal py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 border-t border-primo-border mt-8">
-        <!-- Encabezado y Buscador Propio -->
         <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
             <div>
                 <span class="text-xs font-bold text-primo-muted uppercase tracking-[0.2em]">Gadgets, Coleccionables & Estilo</span>
@@ -296,7 +327,6 @@
                 <p class="text-primo-muted text-sm sm:text-base mt-2 max-w-xl">Audífonos, artículos de cuidado personal, carteras, bolsos de lujo y piezas exclusivas.</p>
             </div>
 
-            <!-- Buscador independiente para esta sección -->
             <div class="w-full md:w-80">
                 <div class="relative">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-primo-muted"></i>
@@ -305,7 +335,6 @@
             </div>
         </div>
 
-        <!-- Filtros propios para esta sección -->
         <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-10 scrollbar-none" id="extra-category-filters">
             <button onclick="setExtraCategory('todos')" data-cat="todos" class="extra-filter-btn active whitespace-nowrap px-5 py-3 rounded-xl text-xs font-bold uppercase tracking-wider bg-white text-black transition shadow-[0_0_15px_rgba(255,255,255,0.2)]">
                 Todos (6)
@@ -321,12 +350,8 @@
             </button>
         </div>
 
-        <!-- Grid de Accesorios & Otros -->
-        <div id="extras-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            <!-- Renderizado dinámico vía JS -->
-        </div>
+        <div id="extras-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8"></div>
 
-        <!-- Mensaje si no hay resultados en esta sección -->
         <div id="no-extra-results" class="hidden text-center py-20">
             <div class="w-16 h-16 mx-auto rounded-2xl bg-primo-card border border-primo-border flex items-center justify-center text-primo-muted mb-4">
                 <i data-lucide="search-x" class="w-8 h-8"></i>
@@ -352,6 +377,40 @@
         </div>
     </footer>
 
+    <!-- DRAWER DE MIS PEDIDOS -->
+    <div id="orders-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleOrdersDrawer()" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-primo-dark border-l border-primo-border shadow-2xl flex flex-col">
+            <div class="p-5 sm:p-6 border-b border-primo-border flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="package" class="w-5 h-5 text-white"></i>
+                    <h3 class="font-display font-bold text-xl text-white">Mis Pedidos</h3>
+                </div>
+                <button onclick="toggleOrdersDrawer()" aria-label="Cerrar pedidos" class="p-2 rounded-xl text-primo-muted hover:text-white hover:bg-primo-card transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="orders-items-container" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4"></div>
+        </div>
+    </div>
+
+    <!-- DRAWER DE DESEADOS -->
+    <div id="wishlist-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleWishlistDrawer()" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-primo-dark border-l border-primo-border shadow-2xl flex flex-col">
+            <div class="p-5 sm:p-6 border-b border-primo-border flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <i data-lucide="heart" class="w-5 h-5 text-white"></i>
+                    <h3 class="font-display font-bold text-xl text-white">Tus Deseados</h3>
+                </div>
+                <button onclick="toggleWishlistDrawer()" aria-label="Cerrar deseados" class="p-2 rounded-xl text-primo-muted hover:text-white hover:bg-primo-card transition">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="wishlist-items-container" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4"></div>
+        </div>
+    </div>
+
     <!-- Drawer Lateral del Carrito -->
     <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
         <div onclick="toggleCart()" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
@@ -366,7 +425,6 @@
                 </button>
             </div>
 
-            <!-- Barra de Envío Gratis -->
             <div class="px-5 sm:px-6 py-3.5 bg-primo-card/80 border-b border-primo-border">
                 <p id="free-shipping-text" class="text-xs text-zinc-300 mb-2">
                     Agrega <span class="text-white font-bold">$2,999</span> para obtener <span class="font-bold text-white glow-white">ENVÍO GRATIS</span>
@@ -376,14 +434,16 @@
                 </div>
             </div>
 
-            <!-- Contenedor de Artículos -->
             <div id="cart-items-container" class="flex-1 overflow-y-auto p-5 sm:p-6 space-y-4"></div>
 
-            <!-- Totales y Checkout -->
-            <div class="p-5 sm:p-6 border-t border-primo-border bg-primo-card/50 space-y-4">
+            <div class="p-5 sm:p-6 border-t border-primo-border bg-primo-card/50 space-y-3">
                 <div class="flex items-center justify-between text-sm text-primo-muted">
                     <span>Subtotal</span>
                     <span id="cart-subtotal" class="text-zinc-200 font-medium">$0 MXN</span>
+                </div>
+                <div id="cart-discount-row" class="hidden items-center justify-between text-sm text-green-400">
+                    <span>Descuento Registro (5% OFF)</span>
+                    <span id="cart-discount" class="font-bold">-$0 MXN</span>
                 </div>
                 <div class="flex items-center justify-between text-sm text-primo-muted">
                     <span>Envío Asegurado</span>
@@ -402,6 +462,64 @@
         </div>
     </div>
 
+    <!-- MODAL DE AUTENTICACIÓN CONECTADO (LOGIN / REGISTRO) -->
+    <div id="auth-modal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div onclick="closeAuthModal()" class="absolute inset-0 bg-black/85 backdrop-blur-sm transition-opacity"></div>
+        <div class="relative bg-primo-dark border border-zinc-700 rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl z-10">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <div class="text-center mb-6">
+                <h3 class="font-display font-extrabold text-2xl text-shimmer tracking-wider">PRIMO CLUB</h3>
+                <p class="text-xs text-zinc-400 mt-1 uppercase tracking-wider">Acceso Exclusivo</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="flex gap-4 mb-6 border-b border-zinc-800 pb-0">
+                <button onclick="switchAuthTab('login')" id="tab-login" class="flex-1 text-white font-bold pb-3 border-b-2 border-white transition">Iniciar Sesión</button>
+                <button onclick="switchAuthTab('register')" id="tab-register" class="flex-1 text-zinc-500 hover:text-zinc-300 font-bold pb-3 border-b-2 border-transparent transition">Registrarse</button>
+            </div>
+            
+            <!-- Formulario Login -->
+            <form id="form-login" onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Correo</label>
+                    <input type="email" id="login-email" required placeholder="tu@correo.com" class="w-full bg-primo-card border border-primo-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-primo-card border border-primo-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition">
+                </div>
+                <button type="submit" class="w-full py-3.5 mt-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-sm uppercase tracking-wider transition box-glow-white">
+                    Entrar al Club
+                </button>
+            </form>
+
+            <!-- Formulario Registro -->
+            <form id="form-register" onsubmit="handleRegister(event)" class="space-y-4 hidden">
+                <div class="p-3 rounded-xl bg-white/10 border border-white/20 text-center">
+                    <p class="text-xs text-white font-semibold">🎁 Regístrate ahora y obtén <span class="font-extrabold underline">5% de descuento</span> en toda la tienda durante 2 horas.</p>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Nombre Completo</label>
+                    <input type="text" id="reg-name" required placeholder="Juan Pérez" class="w-full bg-primo-card border border-primo-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Correo</label>
+                    <input type="email" id="reg-email" required placeholder="tu@correo.com" class="w-full bg-primo-card border border-primo-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-zinc-400 mb-1.5 uppercase tracking-wider">Contraseña</label>
+                    <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres" minlength="6" class="w-full bg-primo-card border border-primo-border rounded-xl px-4 py-3.5 text-sm text-white placeholder-zinc-600 focus:outline-none focus:border-white transition">
+                </div>
+                <button type="submit" class="w-full py-3.5 mt-2 rounded-xl bg-white hover:bg-zinc-200 text-black font-bold text-sm uppercase tracking-wider transition box-glow-white">
+                    Crear Cuenta y Activar 5% OFF
+                </button>
+            </form>
+        </div>
+    </div>
+
     <!-- Modal Guía de Tallas -->
     <div id="size-guide-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4">
         <div onclick="closeSizeGuide()" class="absolute inset-0 bg-black/85 backdrop-blur-sm"></div>
@@ -416,7 +534,6 @@
                 </button>
             </div>
 
-            <!-- Tabla de Ropa -->
             <div class="mb-8">
                 <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
                     <i data-lucide="shirt" class="w-4 h-4"></i> Ropa (Fit Urbano)
@@ -440,7 +557,6 @@
                 </div>
             </div>
 
-            <!-- Tabla de Calzado -->
             <div>
                 <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
                     <i data-lucide="footprints" class="w-4 h-4"></i> Calzado (Conversiones)
@@ -478,462 +594,621 @@
     <!-- Contenedor de Notificaciones Toast -->
     <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- Lógica del Catálogo en JavaScript -->
+    <!-- Lógica del Catálogo Conectado en JavaScript -->
     <script>
         const products = [
-            {
-                id: 1,
-                name: 'Chaqueta Lululemon',
-                category: 'sudaderas',
-                sportItem: true,
-                price: 2800,
-                originalPrice: 3400,
-                tag: 'NUEVO INGRESO',
-                description: 'Chaqueta deportiva de alta gama Lululemon con tejido técnico transpirable y diseño ergonómico.',
-                image: 'lulu.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 2,
-                name: 'Playera Burberry',
-                category: 'playeras',
-                price: 1800,
-                originalPrice: 2400,
-                tag: 'LUJO EXCLUSIVO',
-                description: 'Playera de diseño de alta costura Burberry con patrones icónicos y calidad prémium.',
-                image: 'burberry.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 3,
-                name: 'Tenis On Cloudmonster 2',
-                category: 'calzado',
-                sportItem: true,
-                price: 3400,
-                originalPrice: 4000,
-                tag: 'RUNNING & TECH',
-                description: 'Tenis On Cloudmonster 2 con máxima amortiguación CloudTec y diseño futurista para máximo confort.',
-                image: 'on.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 4,
-                name: 'Golden Goose Stardan',
-                category: 'calzado',
-                price: 3500,
-                originalPrice: 4200,
-                tag: 'SNEAKERS DE LUJO',
-                description: 'Tenis Golden Goose Stardan de diseño inspirado en el básquetbol de los 90 con acabado artesanal exclusivo.',
-                image: 'stardan.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 5,
-                name: 'Playera Essentials',
-                category: 'playeras',
-                price: 1000,
-                originalPrice: 1500,
-                tag: 'MÁS VENDIDA',
-                description: 'Diseño impecable y minimalista con acabado de lujo para uso diario.',
-                image: 'playera.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 6,
-                name: 'Birkenstock Arizona',
-                category: 'calzado',
-                price: 2600,
-                tag: 'SANDALIAS',
-                description: 'Sandalias icónicas de confort supremo y diseño atemporal con materiales prémium.',
-                image: 'bir.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 7,
-                name: 'Hoodie Essentials',
-                category: 'hoodies',
-                price: 1800,
-                tag: 'EDICIÓN EXCLUSIVA',
-                description: 'Sudadera con gorro de doble capa, corte boxy fit y acabado premium.',
-                image: 'hoodie.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 8,
-                name: 'Sueter Alo',
-                category: 'sudaderas',
-                price: 2499,
-                originalPrice: 3000,
-                tag: 'OFERTA ESPECIAL',
-                description: 'Suéter de alta gama con texturas exclusivas, diseño minimalista y confort absoluto.',
-                image: 'salo.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 9,
-                name: 'Dolce & Gabbana Portofino',
-                category: 'calzado',
-                price: 3200,
-                tag: 'CALZADO DE LUJO',
-                description: 'Tenis de diseñador Dolce & Gabbana Portofino con acabados de alta gama y estilo icónico.',
-                image: 'dolce.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 10,
-                name: 'Playera Off-White',
-                category: 'playeras',
-                price: 1500,
-                tag: 'COLECCIÓN EXCLUSIVA',
-                description: 'Playera de diseño urbano prémium con detalles gráficos y excelente calidad.',
-                image: 'offwhite.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 11,
-                name: 'Tenis Veja',
-                category: 'calzado',
-                price: 2800,
-                tag: 'CALZADO',
-                description: 'Tenis minimalistas de lujo y diseño sostenible con acabados premium.',
-                image: 'veja.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 12,
-                name: 'Birkenstock Boston',
-                category: 'calzado',
-                price: 2700,
-                tag: 'CLOGS',
-                description: 'Zuecos Birkenstock Boston de ante suave, máxima comodidad y diseño versátil.',
-                image: 'bos.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 13,
-                name: 'Sueter Alo Zipper',
-                category: 'sudaderas',
-                price: 3000,
-                tag: 'NUEVO LANZAMIENTO',
-                description: 'Suéter con cierre de alta gama, diseño versátil y confort supremo.',
-                image: 'alozip.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 14,
-                name: 'Hoodie Alo',
-                category: 'hoodies',
-                price: 3000,
-                tag: 'NUEVO LANZAMIENTO',
-                description: 'Hoodie exclusiva con gorro ajustable y acabados de máxima calidad.',
-                image: 'halo.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 15,
-                name: 'Tenis Valentino Open Royco',
-                category: 'calzado',
-                price: 3000,
-                tag: 'CALZADO DE LUJO',
-                description: 'Tenis exclusivos de diseñador con acabados de alta gama y máximo confort.',
-                image: 'valentino.png',
-                fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 16,
-                name: 'Playera All Saints',
-                category: 'playeras',
-                price: 1500,
-                tag: 'COLECCIÓN EXCLUSIVA',
-                description: 'Playera de diseño urbano All Saints con acabados prémium y estilo contemporáneo.',
-                image: 'all.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 17,
-                name: 'Tenis Coach High Line',
-                category: 'calzado',
-                price: 2900,
-                tag: 'DESIGNER SNEAKERS',
-                description: 'Tenis Coach High Line de estilo urbano sofisticado y piel de máxima calidad.',
-                image: 'coach.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 18,
-                name: 'Playera All Saints London',
-                category: 'playeras',
-                price: 1500,
-                tag: 'COLECCIÓN EXCLUSIVA',
-                description: 'Playera All Saints London de alta gama con detalles icónicos y ajuste perfecto.',
-                image: 'london.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 19,
-                name: 'Sueter Ralph Lauren',
-                category: 'sudaderas',
-                price: 3000,
-                tag: 'LUJO CLÁSICO',
-                description: 'Suéter icónico Ralph Lauren con tejido de alta calidad y elegancia atemporal.',
-                image: 'ralph.png',
-                fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 20,
-                name: 'Tenis Golden Goose',
-                category: 'calzado',
-                price: 3000,
-                tag: 'CALZADO DE LUJO',
-                description: 'Tenis de diseño artesanal y estilo urbano exclusivo con acabado de alta gama.',
-                image: 'golden.png',
-                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 21,
-                name: 'Hoodie Amiri',
-                category: 'hoodies',
-                price: 3000,
-                tag: 'LUJO URBANO',
-                description: 'Hoodie de lujo Amiri con diseño exclusivo y máxima comodidad.',
-                image: 'amiri.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 22,
-                name: 'Tenis Amiri con plataforma y parche de estrella',
-                category: 'calzado',
-                price: 3000,
-                tag: 'CALZADO DE LUJO',
-                description: 'Tenis de lujo Amiri con plataforma, parche de estrella y diseño urbano exclusivo.',
-                image: 'tamiri.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['26', '27', '28', '29']
-            },
-            {
-                id: 23,
-                name: 'Short Essentials',
-                category: 'shorts',
-                price: 1200,
-                tag: 'NUEVO',
-                description: 'Short cómodo y fresco de diseño minimalista con ajuste perfecto para uso casual o deportivo.',
-                image: 'short.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 24,
-                name: 'Pants Alo',
-                category: 'sudaderas',
-                sportItem: true,
-                price: 2200,
-                tag: 'CONFORT EXCLUSIVO',
-                description: 'Pantalón jogger/pants de alta gama con máxima suavidad, estilo urbano y ajuste ideal.',
-                image: 'pans.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 25,
-                name: 'Pants Alo',
-                category: 'sudaderas',
-                sportItem: true,
-                price: 2200,
-                tag: 'NUEVO INGRESO',
-                description: 'Pantalón jogger/pants alo exclusivo de máxima comodidad y diseño urbano.',
-                image: 'pansa.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 26,
-                name: 'Hoodie Essentials Full Zip',
-                category: 'hoodies',
-                price: 2200,
-                tag: 'NUEVO INGRESO',
-                description: 'Sudadera con cierre completo y gorro essentials, diseño urbano prémium.',
-                image: 'zipese.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 27,
-                name: 'Playera Essentials',
-                category: 'playeras',
-                price: 1000,
-                tag: 'NUEVO INGRESO',
-                description: 'Playera essentials con diseño minimalista y ajuste prémium para uso diario.',
-                image: 'playeras.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 28,
-                name: 'Chamarra The North Face',
-                category: 'hoodies',
-                sportItem: true,
-                price: 3200,
-                tag: 'EXTREME WEATHER',
-                description: 'Chamarra The North Face de alta gama para protección contra el frío y estilo urbano.',
-                image: 'nort.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            },
-            {
-                id: 29,
-                name: 'Playera AllSaints',
-                category: 'playeras',
-                price: 1500,
-                tag: 'COLECCIÓN EXCLUSIVA',
-                description: 'Playera AllSaints de diseño contemporáneo y acabados prémium para un look urbano impecable.',
-                image: 'ese.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['S', 'M', 'L', 'XL']
-            }
+            // --- PLAYERAS ---
+            { id: 2, name: 'Playera Burberry', category: 'playeras', price: 5200, tag: 'LUJO EXCLUSIVO', description: 'Playera de diseño de alta costura Burberry con patrones icónicos y calidad prémium.', image: 'burberry.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 5, name: 'Playera Essentials', category: 'playeras', price: 1499, tag: 'MÁS VENDIDA', description: 'Diseño impecable y minimalista con acabado de lujo para uso diario.', image: 'playera.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 10, name: 'Playera Off-White', category: 'playeras', price: 6999, tag: 'COLECCIÓN EXCLUSIVA', description: 'Playera de diseño urbano prémium con detalles gráficos y excelente calidad.', image: 'offwhite.jpg', fallbackImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 16, name: 'Playera All Saints', category: 'playeras', price: 1199, tag: 'COLECCIÓN EXCLUSIVA', description: 'Playera de diseño urbano All Saints con acabados prémium y estilo contemporáneo.', image: 'all.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 18, name: 'Playera All Saints London', category: 'playeras', price: 1180, tag: 'COLECCIÓN EXCLUSIVA', description: 'Playera All Saints London de alta gama con detalles icónicos y ajuste perfecto.', image: 'london.jpg', fallbackImage: 'https://images.unsplash.com/photo-1588850561407-ed78c282e89b?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 27, name: 'Playera Essentials', category: 'playeras', price: 1299, tag: 'NUEVO INGRESO', description: 'Playera essentials con diseño minimalista y ajuste prémium para uso diario.', image: 'playeras.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 29, name: 'Playera AllSaints', category: 'playeras', price: 2000, tag: 'COLECCIÓN EXCLUSIVA', description: 'Playera AllSaints de diseño contemporáneo y acabados prémium para un look urbano impecable.', image: 'ese.jpg', fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+
+            // --- SHORTS ---
+            { id: 23, name: 'Short Essentials', category: 'shorts', price: 1500, tag: 'NUEVO', description: 'Short cómodo y fresco de diseño minimalista con ajuste perfecto para uso casual o deportivo.', image: 'short.jpg', fallbackImage: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+
+            // --- HOODIES & CHAMARRAS ---
+            { id: 7, name: 'Hoodie Essentials', category: 'hoodies', price: 3000, tag: 'EDICIÓN EXCLUSIVA', description: 'Sudadera con gorro de doble capa, corte boxy fit y acabado premium.', image: 'hoodie.jpg', fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 14, name: 'Hoodie Alo', category: 'hoodies', price: 2999, tag: 'NUEVO LANZAMIENTO', description: 'Hoodie exclusiva con gorro ajustable y acabados de máxima calidad.', image: 'halo.jpg', fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 21, name: 'Hoodie Amiri', category: 'hoodies', price: 30000, tag: 'LUJO URBANO', description: 'Hoodie de lujo Amiri con diseño exclusivo y máxima comodidad.', image: 'amiri.jpg', fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 26, name: 'Hoodie Essentials Full Zip', category: 'hoodies', price: 3800, tag: 'NUEVO INGRESO', description: 'Sudadera con cierre completo y gorro essentials, diseño urbano prémium.', image: 'zipese.jpg', fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 28, name: 'Chamarra The North Face', category: 'hoodies', sportItem: true, price: 2999, tag: 'EXTREME WEATHER', description: 'Chamarra The North Face de alta gama para protección contra el frío y estilo urbano.', image: 'nort.jpg', fallbackImage: 'https://images.unsplash.com/photo-1544441893-675973e31985?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+
+            // --- SUÉTERES & PANTS ---
+            { id: 1, name: 'Chaqueta Lululemon', category: 'sudaderas', sportItem: true, price: 2599, tag: 'NUEVO INGRESO', description: 'Chaqueta deportiva de alta gama Lululemon con tejido técnico transpirable y diseño ergonómico.', image: 'lulu.jpg', fallbackImage: 'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 8, name: 'Sueter Alo', category: 'sudaderas', price: 2390, tag: 'OFERTA ESPECIAL', description: 'Suéter de alta gama con texturas exclusivas, diseño minimalista y confort absoluto.', image: 'salo.jpg', fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 13, name: 'Sueter Alo Zipper', category: 'sudaderas', price: 2799, tag: 'NUEVO LANZAMIENTO', description: 'Suéter con cierre de alta gama, diseño versátil y confort supremo.', image: 'alozip.jpg', fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 19, name: 'Sueter Ralph Lauren', category: 'sudaderas', price: 2600, tag: 'LUJO CLÁSICO', description: 'Suéter icónico Ralph Lauren con tejido de alta calidad y elegancia atemporal.', image: 'ralph.png', fallbackImage: 'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 24, name: 'Pants Alo', category: 'sudaderas', sportItem: true, price: 3199, tag: 'CONFORT EXCLUSIVO', description: 'Pantalón jogger/pants de alta gama con máxima suavidad, estilo urbano y ajuste ideal.', image: 'pans.jpg', fallbackImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+            { id: 25, name: 'Pants Alo', category: 'sudaderas', sportItem: true, price: 2400, tag: 'NUEVO INGRESO', description: 'Pantalón jogger/pants alo exclusivo de máxima comodidad y diseño urbano.', image: 'pansa.jpg', fallbackImage: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['S', 'M', 'L', 'XL'] },
+
+            // --- CALZADO ---
+            { id: 3, name: 'Tenis On Cloudmonster 2', category: 'calzado', sportItem: true, price: 2999, tag: 'RUNNING & TECH', description: 'Tenis On Cloudmonster 2 con máxima amortiguación CloudTec y diseño futurista para máximo confort.', image: 'on.jpg', fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 4, name: 'Golden Goose Stardan', category: 'calzado', price: 12999, tag: 'SNEAKERS DE LUJO', description: 'Tenis Golden Goose Stardan de diseño inspirado en el básquetbol de los 90 con acabado artesanal exclusivo.', image: 'stardan.jpg', fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 6, name: 'Birkenstock Arizona', category: 'calzado', price: 0, priceText: 'Depende modelo', tag: 'SANDALIAS', description: 'Sandalias icónicas de confort supremo y diseño atemporal con materiales prémium.', image: 'bir.jpg', fallbackImage: 'https://images.unsplash.com/photo-1603808033192-082d6919d3e1?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 9, name: 'Dolce & Gabbana Portofino', category: 'calzado', price: 13550, tag: 'CALZADO DE LUJO', description: 'Tenis de diseñador Dolce & Gabbana Portofino con acabados de alta gama y estilo icónico.', image: 'dolce.jpg', fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 11, name: 'Tenis Veja', category: 'calzado', price: 3599, tag: 'CALZADO', description: 'Tenis minimalistas de lujo y diseño sostenible con acabados premium.', image: 'veja.jpg', fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 12, name: 'Birkenstock Boston', category: 'calzado', price: 0, priceText: 'Depende modelo', tag: 'CLOGS', description: 'Zuecos Birkenstock Boston de ante suave, máxima comodidad y diseño versátil.', image: 'bos.jpg', fallbackImage: 'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 15, name: 'Tenis Valentino Open Royco', category: 'calzado', price: 12000, tag: 'CALZADO DE LUJO', description: 'Tenis exclusivos de diseñador con acabados de alta gama y máximo confort.', image: 'valentino.png', fallbackImage: 'https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 17, name: 'Tenis Coach High Line', category: 'calzado', price: 2990, tag: 'DESIGNER SNEAKERS', description: 'Tenis Coach High Line de estilo urbano sofisticado y piel de máxima calidad.', image: 'coach.jpg', fallbackImage: 'https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 20, name: 'Tenis Golden Goose', category: 'calzado', price: 11500, tag: 'CALZADO DE LUJO', description: 'Tenis de diseño artesanal y estilo urbano exclusivo con acabado de alta gama.', image: 'golden.png', fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] },
+            { id: 22, name: 'Tenis Amiri con plataforma y parche de estrella', category: 'calzado', price: 12500, tag: 'CALZADO DE LUJO', description: 'Tenis de lujo Amiri con plataforma, parche de estrella y diseño urbano exclusivo.', image: 'tamiri.jpg', fallbackImage: 'https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['26', '27', '28', '29'] }
         ];
 
         const extraProducts = [
-            {
-                id: 101,
-                name: 'Airpods Max',
-                category: 'accesorios',
-                price: 4500,
-                originalPrice: 5499,
-                tag: 'AUDIO DE LUJO',
-                description: 'Audífonos inalámbricos de alta fidelidad con cancelación activa de ruido y diseño premium.',
-                image: 'max.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            },
-            {
-                id: 102,
-                name: 'Dyson',
-                category: 'accesorios',
-                price: 6800,
-                originalPrice: 8500,
-                tag: 'BEAUTY TECH',
-                description: 'Planchadora y estilizador de pelo Dyson de alta gama para un acabado profesional sin daño térmico.',
-                image: 'dyson.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            },
-            {
-                id: 103,
-                name: 'Bolsa De Mano Zadig',
-                category: 'bolsas',
-                price: 3800,
-                originalPrice: 4600,
-                tag: 'LUJO EXCLUSIVO',
-                description: 'Bolsa de mano Zadig de diseño sofisticado, piel de alta calidad y detalles icónicos.',
-                image: 'avif.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            },
-            {
-                id: 104,
-                name: 'Muñequera Zadig',
-                category: 'bolsas',
-                price: 2200,
-                tag: 'ACCESORIO DE LUJO',
-                description: 'Muñequera Zadig versátil y elegante con acabados prémium para completar tu outfit.',
-                image: 'zadig.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            },
-            {
-                id: 105,
-                name: 'Crossbody Kurt Geiger',
-                category: 'bolsas',
-                price: 3600,
-                originalPrice: 4200,
-                tag: 'DESIGNER BAG',
-                description: 'Bolso Crossbody Kurt Geiger con el icónico diseño colorido y detalles metálicos de alta gama.',
-                image: 'kurt.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            },
-            {
-                id: 106,
-                name: 'Bearbrick',
-                category: 'otros',
-                price: 3500,
-                tag: 'COLECCIONABLE',
-                description: 'Muñeco de arte urbano y diseño exclusivo Bearbrick para decoración de interiores.',
-                image: 'bear.jpg',
-                fallbackImage: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=700&q=80',
-                cleanWhiteBg: true,
-                sizes: ['Única']
-            }
+            { id: 101, name: 'Airpods Max', category: 'accesorios', price: 11000, tag: 'AUDIO DE LUJO', description: 'Audífonos inalámbricos de alta fidelidad con cancelación activa de ruido y diseño premium.', image: 'max.jpg', fallbackImage: 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] },
+            { id: 102, name: 'Dyson', category: 'accesorios', price: 8999, tag: 'BEAUTY TECH', description: 'Planchadora y estilizador de pelo Dyson de alta gama para un acabado profesional sin daño térmico.', image: 'dyson.jpg', fallbackImage: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] },
+            { id: 103, name: 'Bolsa De Mano Zadig', category: 'bolsas', price: 7000, tag: 'LUJO EXCLUSIVO', description: 'Bolsa de mano Zadig de diseño sofisticado, piel de alta calidad y detalles icónicos.', image: 'avif.jpg', fallbackImage: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] },
+            { id: 104, name: 'Muñequera Zadig', category: 'bolsas', price: 4000, tag: 'ACCESORIO DE LUJO', description: 'Muñequera Zadig versátil y elegante con acabados prémium para completar tu outfit.', image: 'zadig.jpg', fallbackImage: 'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] },
+            { id: 105, name: 'Crossbody Kurt Geiger', category: 'bolsas', price: 6000, tag: 'DESIGNER BAG', description: 'Bolso Crossbody Kurt Geiger con el icónico diseño colorido y detalles metálicos de alta gama.', image: 'kurt.jpg', fallbackImage: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] },
+            { id: 106, name: 'Bearbrick', category: 'otros', price: 0, priceText: 'Depende precio', tag: 'COLECCIONABLE', description: 'Muñeco de arte urbano y diseño exclusivo Bearbrick para decoración de interiores.', image: 'bear.jpg', fallbackImage: 'https://images.unsplash.com/photo-1563089145-599997674d42?auto=format&fit=crop&w=700&q=80', cleanWhiteBg: true, sizes: ['Única'] }
         ];
 
-        let cart = [];
+        const allCatalogItems = [...products, ...extraProducts];
+
         let selectedSizes = {};
         let currentCategory = 'todos';
         let currentExtraCategory = 'todos';
         const FREE_SHIPPING_THRESHOLD = 2999;
         const SHIPPING_COST = 250;
+        const DISCOUNT_RATE = 0.05; // 5% de descuento
 
-        [...products, ...extraProducts].forEach(p => {
+        allCatalogItems.forEach(p => {
             selectedSizes[p.id] = p.sizes[0];
         });
 
+        // ==========================================
+        // CONEXIÓN CON BASE DE DATOS COMPARTIDA Y PROMO 2 HORAS
+        // ==========================================
+        let usersDB = JSON.parse(localStorage.getItem('primo_users')) || [];
+        let currentUser = JSON.parse(localStorage.getItem('primo_current_user')) || null;
+        let promoInterval = null;
+
+        function hasActivePromo() {
+            return Boolean(currentUser && currentUser.discountExpiresAt && currentUser.discountExpiresAt > Date.now());
+        }
+
+        function getDiscountedPrice(price) {
+            return hasActivePromo() ? Math.round(price * (1 - DISCOUNT_RATE)) : price;
+        }
+
+        function startPromoTimer() {
+            if (promoInterval) clearInterval(promoInterval);
+            const banner = document.getElementById('promo-countdown-banner');
+            const display = document.getElementById('promo-timer-display');
+
+            function updateTimer() {
+                if (!hasActivePromo()) {
+                    banner.classList.add('hidden');
+                    clearInterval(promoInterval);
+                    renderCatalog();
+                    renderExtras();
+                    updateCartUI();
+                    return;
+                }
+
+                banner.classList.remove('hidden');
+
+                const remainingMs = currentUser.discountExpiresAt - Date.now();
+                const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
+                const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
+                const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
+                const seconds = String(totalSeconds % 60).padStart(2, '0');
+
+                display.textContent = `${hours}:${minutes}:${seconds}`;
+            }
+
+            updateTimer();
+            if (hasActivePromo()) {
+                promoInterval = setInterval(updateTimer, 1000);
+            }
+        }
+
+        function getUserCartKey() {
+            return currentUser ? `primo_cart_${currentUser.email}` : 'primo_guest_cart';
+        }
+        function getUserWishlistKey() {
+            return currentUser ? `primo_wishlist_${currentUser.email}` : 'primo_guest_wishlist';
+        }
+        function getUserOrdersKey() {
+            return currentUser ? `primo_orders_${currentUser.email}` : 'primo_guest_orders';
+        }
+
+        let cart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
+        let wishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
+        let orders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
+
+        function saveCart() {
+            localStorage.setItem(getUserCartKey(), JSON.stringify(cart));
+        }
+
+        function saveWishlist() {
+            localStorage.setItem(getUserWishlistKey(), JSON.stringify(wishlist));
+        }
+
+        function saveOrders() {
+            localStorage.setItem(getUserOrdersKey(), JSON.stringify(orders));
+        }
+
+        function updateAuthUI() {
+            const desktopContainer = document.getElementById('auth-desktop-container');
+            const mobileContainer = document.getElementById('auth-mobile-container');
+            const ordersCountBadge = orders.length > 0 
+                ? `<span class="ml-auto bg-white text-black text-[10px] font-extrabold px-2 py-0.5 rounded-full">${orders.length}</span>` 
+                : '';
+
+            if (currentUser) {
+                desktopContainer.innerHTML = `
+                    <button onclick="toggleUserMenu()" id="user-btn" aria-label="Mi Cuenta" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-white text-white transition group hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(255,255,255,0.05)] hover:shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+                        <i data-lucide="user" class="w-5 h-5 text-white group-hover:fill-white/30 transition-colors"></i>
+                        <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-primo-dark rounded-full shadow-[0_0_8px_rgba(34,197,94,0.8)]"></span>
+                    </button>
+                    <div id="user-dropdown" class="absolute right-0 mt-3 w-60 bg-primo-card border border-primo-border rounded-2xl shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-300 z-50">
+                        <div class="p-4 border-b border-zinc-800">
+                            <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider mb-1">Bienvenido</p>
+                            <p class="text-sm font-bold text-white truncate">${currentUser.name}</p>
+                            <p class="text-[11px] text-zinc-500 truncate">${currentUser.email}</p>
+                        </div>
+                        <div class="p-2 space-y-1">
+                            <button onclick="toggleUserMenu(); toggleOrdersDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white hover:bg-zinc-800 transition">
+                                <i data-lucide="package" class="w-4 h-4"></i>
+                                <span>Mis Pedidos</span>
+                                ${ordersCountBadge}
+                            </button>
+                            <a href="index.html" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 transition">
+                                <i data-lucide="home" class="w-4 h-4"></i> Ir al Inicio
+                            </a>
+                        </div>
+                        <div class="p-2 border-t border-zinc-800">
+                            <button onclick="handleLogout()" class="w-full flex items-center gap-3 text-left px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition">
+                                <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                mobileContainer.innerHTML = `
+                    <div class="flex items-center gap-3 px-4 py-3">
+                        <div class="w-10 h-10 rounded-full bg-zinc-800 flex items-center justify-center border border-zinc-600 relative">
+                            <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            <span class="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-primo-dark rounded-full"></span>
+                        </div>
+                        <div class="flex-1 overflow-hidden">
+                            <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider">Sesión Iniciada</p>
+                            <p class="text-sm font-bold text-white truncate">${currentUser.name}</p>
+                        </div>
+                        <button onclick="handleLogout(); closeMobileMenu();" class="p-2 text-red-400 hover:text-red-300 bg-red-500/10 rounded-xl transition" title="Cerrar sesión">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <button onclick="closeMobileMenu(); toggleOrdersDrawer();" class="w-full text-left px-4 py-3 mt-1 rounded-xl text-base font-medium text-white bg-primo-card hover:bg-zinc-800 flex items-center gap-2.5 transition">
+                        <i data-lucide="package" class="w-5 h-5 text-white"></i>
+                        <span>Mis Pedidos</span>
+                        ${ordersCountBadge}
+                    </button>
+                `;
+            } else {
+                desktopContainer.innerHTML = `
+                    <button onclick="toggleUserMenu()" id="user-btn" aria-label="Cuenta y Pedidos" class="relative p-2.5 sm:p-3 rounded-xl bg-primo-card hover:bg-zinc-800 border border-primo-border hover:border-white text-white transition group hover:scale-105 active:scale-95">
+                        <i data-lucide="user" class="w-5 h-5 text-zinc-400 group-hover:text-white transition-colors"></i>
+                    </button>
+                    <div id="user-dropdown" class="absolute right-0 mt-3 w-60 bg-primo-card border border-primo-border rounded-2xl shadow-2xl opacity-0 invisible transform translate-y-2 transition-all duration-300 z-50">
+                        <div class="p-4 border-b border-zinc-800">
+                            <p class="text-xs text-zinc-400 font-medium uppercase tracking-wider mb-1">Cuenta</p>
+                            <p class="text-sm font-bold text-white">Invitado PRIMO CLUB</p>
+                        </div>
+                        <div class="p-2 space-y-1">
+                            <button onclick="toggleUserMenu(); toggleOrdersDrawer();" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-white hover:bg-zinc-800 transition">
+                                <i data-lucide="package" class="w-4 h-4"></i>
+                                <span>Mis Pedidos</span>
+                                ${ordersCountBadge}
+                            </button>
+                            <button onclick="toggleUserMenu(); openAuthModal('register');" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800 transition">
+                                <i data-lucide="log-in" class="w-4 h-4"></i> Iniciar Sesión / Registro
+                            </button>
+                        </div>
+                    </div>
+                `;
+
+                mobileContainer.innerHTML = `
+                    <div class="space-y-2 mt-2">
+                        <button onclick="closeMobileMenu(); toggleOrdersDrawer();" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-white bg-primo-card hover:bg-zinc-800 flex items-center gap-2.5 transition">
+                            <i data-lucide="package" class="w-5 h-5 text-white"></i>
+                            <span>Mis Pedidos</span>
+                            ${ordersCountBadge}
+                        </button>
+                        <button onclick="closeMobileMenu(); openAuthModal('register');" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-white hover:bg-primo-card flex items-center gap-2.5 transition border border-primo-border">
+                            <i data-lucide="user" class="w-5 h-5 text-white"></i> Iniciar Sesión / Registro
+                        </button>
+                    </div>
+                `;
+            }
+            
+            lucide.createIcons();
+        }
+
+        function openAuthModal(defaultTab = 'login') {
+            closeMobileMenu();
+            const modal = document.getElementById('auth-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            switchAuthTab(defaultTab);
+        }
+
+        function closeAuthModal() {
+            const modal = document.getElementById('auth-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.getElementById('form-login').reset();
+            document.getElementById('form-register').reset();
+        }
+
+        function switchAuthTab(tab) {
+            const formLogin = document.getElementById('form-login');
+            const formRegister = document.getElementById('form-register');
+            const btnLogin = document.getElementById('tab-login');
+            const btnRegister = document.getElementById('tab-register');
+
+            if (tab === 'login') {
+                formLogin.classList.remove('hidden');
+                formRegister.classList.add('hidden');
+                btnLogin.className = "flex-1 text-white font-bold pb-3 border-b-2 border-white transition";
+                btnRegister.className = "flex-1 text-zinc-500 hover:text-zinc-300 font-bold pb-3 border-b-2 border-transparent transition";
+            } else {
+                formLogin.classList.add('hidden');
+                formRegister.classList.remove('hidden');
+                btnRegister.className = "flex-1 text-white font-bold pb-3 border-b-2 border-white transition";
+                btnLogin.className = "flex-1 text-zinc-500 hover:text-zinc-300 font-bold pb-3 border-b-2 border-transparent transition";
+            }
+        }
+
+        function syncUserDataOnLogin() {
+            const guestCart = [...cart];
+            const guestWishlist = [...wishlist];
+            const guestOrders = [...orders];
+
+            const savedCart = JSON.parse(localStorage.getItem(getUserCartKey())) || [];
+            const savedWishlist = JSON.parse(localStorage.getItem(getUserWishlistKey())) || [];
+            const savedOrders = JSON.parse(localStorage.getItem(getUserOrdersKey())) || [];
+
+            guestCart.forEach(gItem => {
+                const existing = savedCart.find(sItem => sItem.cartKey === gItem.cartKey);
+                if (existing) {
+                    existing.quantity += gItem.quantity;
+                } else {
+                    savedCart.push(gItem);
+                }
+            });
+
+            guestWishlist.forEach(gId => {
+                if (!savedWishlist.includes(gId)) {
+                    savedWishlist.push(gId);
+                }
+            });
+
+            guestOrders.forEach(gOrder => {
+                if (!savedOrders.some(sOrder => sOrder.id === gOrder.id)) {
+                    savedOrders.unshift(gOrder);
+                }
+            });
+
+            localStorage.removeItem('primo_guest_cart');
+            localStorage.removeItem('primo_guest_wishlist');
+            localStorage.removeItem('primo_guest_orders');
+
+            cart = savedCart;
+            wishlist = savedWishlist;
+            orders = savedOrders;
+            saveCart();
+            saveWishlist();
+            saveOrders();
+
+            startPromoTimer();
+            updateCartUI();
+            updateWishlistBadge();
+            updateWishlistDrawerUI();
+            updateOrdersDrawerUI();
+            renderCatalog();
+            renderExtras();
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const password = document.getElementById('reg-password').value;
+
+            const exists = usersDB.find(u => u.email.toLowerCase() === email);
+            if (exists) {
+                showToast('Este correo ya está registrado.');
+                return;
+            }
+
+            // Activar 5% de descuento por 2 horas (7,200,000 ms)
+            const discountExpiresAt = Date.now() + (2 * 60 * 60 * 1000);
+            const newUser = { name, email, password, discountExpiresAt };
+
+            usersDB.push(newUser);
+            localStorage.setItem('primo_users', JSON.stringify(usersDB));
+
+            currentUser = newUser;
+            localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
+
+            syncUserDataOnLogin();
+            updateAuthUI();
+            closeAuthModal();
+            showToast(`¡Bienvenido ${name}! 5% OFF activado por 2 horas 🎉`);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+
+            const user = usersDB.find(u => u.email.toLowerCase() === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                localStorage.setItem('primo_current_user', JSON.stringify(currentUser));
+                
+                syncUserDataOnLogin();
+                updateAuthUI();
+                closeAuthModal();
+                showToast(`Sesión iniciada: ${user.name}`);
+            } else {
+                showToast('Correo o contraseña incorrectos.');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            localStorage.removeItem('primo_current_user');
+
+            cart = JSON.parse(localStorage.getItem('primo_guest_cart')) || [];
+            wishlist = JSON.parse(localStorage.getItem('primo_guest_wishlist')) || [];
+            orders = JSON.parse(localStorage.getItem('primo_guest_orders')) || [];
+            
+            document.getElementById('cart-drawer').classList.add('hidden');
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
+
+            startPromoTimer();
+            updateAuthUI();
+            updateCartUI();
+            updateWishlistBadge();
+            updateWishlistDrawerUI();
+            updateOrdersDrawerUI();
+            renderCatalog();
+            renderExtras();
+
+            showToast('Sesión cerrada. Tu carrito y pedidos están guardados.');
+        }
+
+        function toggleUserMenu() {
+            const dropdown = document.getElementById('user-dropdown');
+            if (dropdown) {
+                dropdown.classList.toggle('opacity-0');
+                dropdown.classList.toggle('invisible');
+                dropdown.classList.toggle('translate-y-2');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const container = document.getElementById('auth-desktop-container');
+            if (container && !container.contains(e.target)) {
+                const dropdown = document.getElementById('user-dropdown');
+                if (dropdown && !dropdown.classList.contains('invisible')) {
+                    dropdown.classList.add('opacity-0', 'invisible', 'translate-y-2');
+                }
+            }
+        });
+
+        // ==========================================
+        // LÓGICA DE MIS PEDIDOS
+        // ==========================================
+        function toggleOrdersDrawer() {
+            document.getElementById('cart-drawer').classList.add('hidden');
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            const drawer = document.getElementById('orders-drawer');
+            drawer.classList.toggle('hidden');
+            if (!drawer.classList.contains('hidden')) {
+                updateOrdersDrawerUI();
+            }
+        }
+
+        function updateOrdersDrawerUI() {
+            const container = document.getElementById('orders-items-container');
+            if (!container) return;
+
+            if (orders.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12">
+                        <div class="w-16 h-16 rounded-2xl bg-primo-card border border-primo-border flex items-center justify-center text-primo-muted mb-4">
+                            <i data-lucide="package" class="w-7 h-7"></i>
+                        </div>
+                        <p class="font-display font-bold text-lg text-white">Aún no tienes pedidos</p>
+                        <p class="text-xs text-primo-muted max-w-xs mt-1 mb-6">Cuando finalices un pedido por WhatsApp desde tu carrito, aparecerá registrado aquí.</p>
+                        <button onclick="toggleOrdersDrawer()" class="px-6 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider transition">
+                            Explorar Catálogo
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = orders.map(order => `
+                <div class="p-4 rounded-2xl bg-primo-card border border-primo-border space-y-3">
+                    <div class="flex items-center justify-between border-b border-zinc-800 pb-2.5">
+                        <div>
+                            <span class="text-[11px] font-bold text-primo-muted uppercase tracking-wider block">Pedido #${order.id}</span>
+                            <span class="text-xs text-zinc-400">${order.date}</span>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-full bg-green-500/15 border border-green-500/30 text-green-400 text-[10px] font-bold uppercase tracking-wider">
+                            ${order.status}
+                        </span>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        ${order.items.map(item => `
+                            <div class="flex items-center gap-3">
+                                <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${item.fallbackImage}'" class="w-11 h-14 rounded-lg ${item.cleanWhiteBg ? 'object-contain bg-white p-0.5' : 'object-cover grayscale bg-zinc-900'}">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-xs font-bold text-white truncate">${item.name}</p>
+                                    <p class="text-[11px] text-zinc-400">Talla: ${item.size} • Cant: ${item.quantity}</p>
+                                </div>
+                                <span class="text-xs font-semibold text-white whitespace-nowrap">$${(item.price * item.quantity).toLocaleString('es-MX')}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="pt-2.5 border-t border-zinc-800 flex items-center justify-between text-xs">
+                        <span class="text-zinc-400">Envío: <strong class="text-white">${order.shipping}</strong></span>
+                        <span class="font-display font-bold text-sm text-white glow-white">Total: $${order.total.toLocaleString('es-MX')} MXN</span>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+        }
+
+        // ==========================================
+        // LÓGICA DE LISTA DE DESEOS
+        // ==========================================
+        function toggleWishlistItem(productId) {
+            const index = wishlist.indexOf(productId);
+            if (index > -1) {
+                wishlist.splice(index, 1);
+                showToast('Eliminado de deseados');
+            } else {
+                wishlist.push(productId);
+                showToast('Agregado a deseados 🤍');
+            }
+            
+            saveWishlist();
+            updateWishlistBadge();
+            updateWishlistDrawerUI();
+            
+            renderCatalog();
+            renderExtras();
+        }
+
+        function updateWishlistBadge() {
+            const badge = document.getElementById('wishlist-badge');
+            if (badge) {
+                badge.textContent = wishlist.length;
+            }
+        }
+
+        function toggleWishlistDrawer() {
+            document.getElementById('cart-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
+            const drawer = document.getElementById('wishlist-drawer');
+            drawer.classList.toggle('hidden');
+            if(!drawer.classList.contains('hidden')) {
+                updateWishlistDrawerUI();
+            }
+        }
+
+        function updateWishlistDrawerUI() {
+            const container = document.getElementById('wishlist-items-container');
+            const wProducts = wishlist.map(id => allCatalogItems.find(p => p.id === id)).filter(Boolean);
+
+            if (wProducts.length === 0) {
+                container.innerHTML = `
+                    <div class="h-full flex flex-col items-center justify-center text-center py-12">
+                        <div class="w-16 h-16 rounded-2xl bg-primo-card border border-primo-border flex items-center justify-center text-primo-muted mb-4">
+                            <i data-lucide="heart" class="w-7 h-7"></i>
+                        </div>
+                        <p class="font-display font-bold text-lg text-white">Tu lista está vacía</p>
+                        <p class="text-xs text-primo-muted max-w-xs mt-1 mb-6">Guarda tus piezas favoritas tocando el ícono del corazón.</p>
+                        <button onclick="toggleWishlistDrawer()" class="px-6 py-3 rounded-xl bg-white hover:bg-zinc-200 text-black text-xs font-bold uppercase tracking-wider transition">
+                            Explorar Catálogo
+                        </button>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = wProducts.map(item => {
+                const finalPrice = getDiscountedPrice(item.price);
+                return `
+                    <div class="flex gap-4 p-3.5 rounded-2xl bg-primo-card border border-primo-border transition hover:border-zinc-500">
+                        <div class="relative w-16 h-20 sm:w-20 sm:h-24 rounded-xl overflow-hidden ${item.cleanWhiteBg ? 'bg-white p-1' : 'bg-zinc-900'}">
+                            <img src="${item.image}" alt="${item.name}" onerror="this.onerror=null; this.src='${item.fallbackImage}'" class="w-full h-full ${item.cleanWhiteBg ? 'object-contain' : 'object-cover grayscale'}">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-between">
+                            <div>
+                                <div class="flex justify-between items-start gap-2">
+                                    <h4 class="font-bold text-sm text-white leading-tight">${item.name}</h4>
+                                    <button onclick="toggleWishlistItem(${item.id})" class="text-zinc-500 hover:text-white transition" title="Eliminar de deseados">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    </button>
+                                </div>
+                                <span class="font-bold text-sm text-white mt-1 block">${item.priceText ? item.priceText : `$${finalPrice.toLocaleString('es-MX')} MXN`}</span>
+                            </div>
+                            <button onclick="goToProduct(${item.id})" class="w-full mt-2 py-2 rounded-xl bg-zinc-800 hover:bg-white text-white hover:text-black font-bold text-[11px] uppercase tracking-wider transition flex items-center justify-center gap-1.5">
+                                <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                <span>Ver en Catálogo</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            lucide.createIcons();
+        }
+
+        function goToProduct(productId) {
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            
+            const card = document.getElementById(`product-card-${productId}`);
+            if (!card) {
+                resetFilters();
+                resetExtraFilters();
+            }
+
+            setTimeout(() => {
+                const targetCard = document.getElementById(`product-card-${productId}`);
+                if (targetCard) {
+                    targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => {
+                        targetCard.classList.add('highlight-product');
+                        setTimeout(() => {
+                            targetCard.classList.remove('highlight-product');
+                        }, 2000);
+                    }, 300);
+                }
+            }, 100);
+        }
+
+        // ==========================================
+        // LÓGICA DEL CATÁLOGO Y RENDERIZADO
+        // ==========================================
+        function inquireModelWhatsApp(productId) {
+            const product = allCatalogItems.find(p => p.id === productId);
+            const size = selectedSizes[productId];
+            let message = size === 'Única'
+                ? `Hola *PRIMO CLUB*, me interesa cotizar el precio y disponibilidad de *${product.name}*.`
+                : `Hola *PRIMO CLUB*, me interesa cotizar el modelo y disponibilidad de *${product.name}* en talla *${size}*.`;
+            if (hasActivePromo()) {
+                message += `%0A🎁 *Cuento con 5% OFF activo por registro nuevo.*`;
+            }
+            if (currentUser) {
+                message += `%0A*Cliente:* ${currentUser.name} (${currentUser.email})`;
+            }
+            const whatsappUrl = `https://wa.me/9812059251?text=${message}`;
+            window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+        }
+
         function renderProductCard(product) {
             const activeSize = selectedSizes[product.id];
+            const isWished = wishlist.includes(product.id);
+            const heartColor = isWished ? 'fill-white text-white' : 'text-white';
+            const promoActive = hasActivePromo();
+            
             const imgContainerClass = product.cleanWhiteBg
                 ? 'relative aspect-[4/5] bg-white p-4 overflow-hidden flex items-center justify-center'
                 : 'relative aspect-[4/5] bg-zinc-950 overflow-hidden';
@@ -941,9 +1216,49 @@
                 ? 'product-img w-full h-full object-contain transition duration-500'
                 : 'product-img w-full h-full object-cover grayscale contrast-110 transition duration-500';
 
-            const priceDisplay = product.originalPrice 
-                ? `<div class="flex flex-col items-end"><span class="text-xs text-zinc-500 line-through">$${product.originalPrice.toLocaleString('es-MX')}</span><span class="font-display font-extrabold text-white text-lg">$${product.price.toLocaleString('es-MX')} MXN</span></div>`
-                : `<span class="font-display font-extrabold text-white text-lg">$${product.price.toLocaleString('es-MX')} MXN</span>`;
+            const discountedPrice = getDiscountedPrice(product.price);
+            let priceDisplay = '';
+
+            if (product.priceText) {
+                priceDisplay = `<span class="font-display font-extrabold text-white text-base glow-white whitespace-nowrap">${product.priceText}</span>`;
+            } else if (promoActive) {
+                priceDisplay = `
+                    <div class="flex flex-col items-end text-right">
+                        <div class="flex items-center gap-1.5 mb-0.5">
+                            <span class="px-1.5 py-0.5 rounded bg-white text-black text-[9px] font-extrabold tracking-wider uppercase">-5%</span>
+                            <span class="text-xs text-zinc-500 line-through">$${product.price.toLocaleString('es-MX')}</span>
+                        </div>
+                        <div class="flex items-baseline gap-1 whitespace-nowrap">
+                            <span class="font-display font-extrabold text-white text-lg sm:text-xl glow-white">$${discountedPrice.toLocaleString('es-MX')}</span>
+                            <span class="text-[10px] font-bold text-zinc-400 tracking-wider">MXN</span>
+                        </div>
+                    </div>`;
+            } else if (product.originalPrice) {
+                priceDisplay = `
+                    <div class="flex flex-col items-end text-right">
+                        <span class="text-xs text-zinc-500 line-through mb-0.5">$${product.originalPrice.toLocaleString('es-MX')}</span>
+                        <div class="flex items-baseline gap-1 whitespace-nowrap">
+                            <span class="font-display font-extrabold text-white text-lg sm:text-xl">$${product.price.toLocaleString('es-MX')}</span>
+                            <span class="text-[10px] font-bold text-zinc-400 tracking-wider">MXN</span>
+                        </div>
+                    </div>`;
+            } else {
+                priceDisplay = `
+                    <div class="flex items-baseline gap-1 whitespace-nowrap">
+                        <span class="font-display font-extrabold text-white text-lg sm:text-xl">$${product.price.toLocaleString('es-MX')}</span>
+                        <span class="text-[10px] font-bold text-zinc-400 tracking-wider">MXN</span>
+                    </div>`;
+            }
+
+            const actionButton = product.priceText
+                ? `<button onclick="inquireModelWhatsApp(${product.id})" class="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white active:scale-95">
+                        <i data-lucide="message-circle" class="w-4 h-4"></i>
+                        <span>Consultar por WhatsApp</span>
+                   </button>`
+                : `<button onclick="addToCart(${product.id})" class="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white active:scale-95">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Agregar al Carrito</span>
+                   </button>`;
 
             const sizesHtml = product.sizes.length === 1 && product.sizes[0] === 'Única'
                 ? `<div class="text-xs font-semibold text-zinc-400 py-1.5">Versión: <span class="text-white font-bold">Estándar</span></div>`
@@ -968,13 +1283,16 @@
                   `;
 
             return `
-                <article class="product-card bg-primo-card border border-primo-border rounded-3xl overflow-hidden flex flex-col justify-between transition duration-300 hover:border-zinc-500 shadow-2xl">
+                <article id="product-card-${product.id}" class="product-card bg-primo-card border border-primo-border rounded-3xl overflow-hidden flex flex-col justify-between transition duration-300 hover:border-zinc-500 shadow-2xl">
                     <div>
                         <div class="${imgContainerClass}">
                             <img src="${product.image}" alt="${product.name}" class="${imgClass}" onerror="this.onerror=null; this.src='${product.fallbackImage}'">
                             <span class="absolute top-4 left-4 px-3 py-1 rounded-full bg-black/85 backdrop-blur-md border border-zinc-700 text-white text-[10px] font-bold uppercase tracking-wider">
                                 ${product.tag}
                             </span>
+                            <button onclick="toggleWishlistItem(${product.id})" class="absolute top-4 right-4 p-2 rounded-full bg-black/85 backdrop-blur-md border border-zinc-700 hover:border-white transition-all z-20 group">
+                                <i data-lucide="heart" class="w-4 h-4 ${heartColor} group-hover:fill-white transition-colors"></i>
+                            </button>
                         </div>
 
                         <div class="p-5 sm:p-6 pb-4">
@@ -991,15 +1309,12 @@
                         </div>
                     </div>
 
-                    <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-2 border-t border-primo-border mt-auto">
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="text-xs text-zinc-400 uppercase font-medium">Precio:</span>
+                    <div class="px-5 sm:px-6 pb-5 sm:pb-6 pt-3.5 border-t border-primo-border mt-auto">
+                        <div class="flex items-end justify-between gap-2 mb-4">
+                            <span class="text-[11px] text-zinc-400 uppercase font-semibold tracking-wider pb-0.5">Precio</span>
                             ${priceDisplay}
                         </div>
-                        <button onclick="addToCart(${product.id})" class="w-full py-3.5 rounded-2xl bg-white hover:bg-zinc-200 text-black font-bold text-xs uppercase tracking-wider transition flex items-center justify-center gap-2 box-glow-white active:scale-95">
-                            <i data-lucide="plus" class="w-4 h-4"></i>
-                            <span>Agregar al Carrito</span>
-                        </button>
+                        ${actionButton}
                     </div>
                 </article>
             `;
@@ -1103,8 +1418,9 @@
         }
 
         function addToCart(productId) {
-            const allItems = [...products, ...extraProducts];
-            const product = allItems.find(p => p.id === productId);
+            const product = allCatalogItems.find(p => p.id === productId);
+            if (!product || product.priceText) return;
+
             const size = selectedSizes[productId];
             const cartKey = `${productId}-${size}`;
 
@@ -1124,8 +1440,13 @@
                 });
             }
 
+            saveCart();
             updateCartUI();
-            toggleCart();
+            
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
+            document.getElementById('cart-drawer').classList.remove('hidden');
+            
             showToast(`Agregado: ${product.name} (${size})`);
         }
 
@@ -1136,6 +1457,7 @@
                 if (cart[itemIndex].quantity <= 0) {
                     cart.splice(itemIndex, 1);
                 }
+                saveCart();
                 updateCartUI();
             }
         }
@@ -1144,34 +1466,48 @@
             const container = document.getElementById('cart-items-container');
             const badge = document.getElementById('cart-badge');
             const subtotalEl = document.getElementById('cart-subtotal');
+            const discountRowEl = document.getElementById('cart-discount-row');
+            const discountEl = document.getElementById('cart-discount');
             const totalEl = document.getElementById('cart-total');
             const shippingEl = document.getElementById('cart-shipping');
             const checkoutBtn = document.getElementById('checkout-btn');
             const freeShippingText = document.getElementById('free-shipping-text');
             const freeShippingBar = document.getElementById('free-shipping-bar');
 
+            const promoActive = hasActivePromo();
             const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const rawSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discountAmount = promoActive ? Math.round(rawSubtotal * DISCOUNT_RATE) : 0;
+            const discountedSubtotal = rawSubtotal - discountAmount;
 
             badge.textContent = totalItems;
-            subtotalEl.textContent = `$${subtotal.toLocaleString('es-MX')} MXN`;
+            subtotalEl.textContent = `$${rawSubtotal.toLocaleString('es-MX')} MXN`;
 
-            const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
-            const progress = Math.min(100, (subtotal / FREE_SHIPPING_THRESHOLD) * 100);
+            if (promoActive && rawSubtotal > 0) {
+                discountRowEl.classList.remove('hidden');
+                discountRowEl.classList.add('flex');
+                discountEl.textContent = `-$${discountAmount.toLocaleString('es-MX')} MXN`;
+            } else {
+                discountRowEl.classList.add('hidden');
+                discountRowEl.classList.remove('flex');
+            }
+
+            const remaining = Math.max(0, FREE_SHIPPING_THRESHOLD - discountedSubtotal);
+            const progress = Math.min(100, (discountedSubtotal / FREE_SHIPPING_THRESHOLD) * 100);
             freeShippingBar.style.width = `${progress}%`;
 
-            if (subtotal >= FREE_SHIPPING_THRESHOLD && subtotal > 0) {
+            if (discountedSubtotal >= FREE_SHIPPING_THRESHOLD && discountedSubtotal > 0) {
                 freeShippingText.innerHTML = `<span class="text-white font-bold glow-white">¡FELICIDADES!</span> Tienes <span class="text-white font-bold">ENVÍO GRATIS</span> en tu pedido.`;
                 shippingEl.textContent = 'GRATIS';
                 shippingEl.className = 'text-white font-bold glow-white';
             } else {
                 freeShippingText.innerHTML = `Agrega <span class="text-white font-bold">$${remaining.toLocaleString('es-MX')}</span> más para obtener <span class="font-bold text-white">ENVÍO GRATIS</span>`;
-                shippingEl.textContent = subtotal === 0 ? '$0 MXN' : `$${SHIPPING_COST} MXN`;
+                shippingEl.textContent = discountedSubtotal === 0 ? '$0 MXN' : `$${SHIPPING_COST} MXN`;
                 shippingEl.className = 'text-zinc-200 font-medium';
             }
 
-            const shippingCost = (subtotal === 0 || subtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
-            const finalTotal = subtotal + shippingCost;
+            const shippingCost = (discountedSubtotal === 0 || discountedSubtotal >= FREE_SHIPPING_THRESHOLD) ? 0 : SHIPPING_COST;
+            const finalTotal = discountedSubtotal + shippingCost;
             totalEl.textContent = `$${finalTotal.toLocaleString('es-MX')} MXN`;
 
             if (cart.length === 0) {
@@ -1226,24 +1562,53 @@
         function checkoutWhatsApp() {
             if (cart.length === 0) return;
 
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+            const promoActive = hasActivePromo();
+            const rawSubtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discountAmount = promoActive ? Math.round(rawSubtotal * DISCOUNT_RATE) : 0;
+            const discountedSubtotal = rawSubtotal - discountAmount;
+            const shippingCost = discountedSubtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
             const shipping = shippingCost === 0 ? 'GRATIS' : `$${SHIPPING_COST} MXN`;
-            const total = subtotal + shippingCost;
+            const total = discountedSubtotal + shippingCost;
 
-            let message = `Hola *PRIMO CLUB*, ¡quiero hacer el siguiente pedido:%0A%0A`;
+            const now = new Date();
+            const formattedDate = now.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' });
+            const newOrder = {
+                id: String(Date.now()).slice(-6),
+                date: formattedDate,
+                status: 'Enviado a WhatsApp',
+                items: JSON.parse(JSON.stringify(cart)),
+                subtotal: rawSubtotal,
+                discount: discountAmount,
+                shipping,
+                total
+            };
+            orders.unshift(newOrder);
+            saveOrders();
+            updateAuthUI();
+            updateOrdersDrawerUI();
+
+            let message = `Hola *PRIMO CLUB*, ¡quiero hacer el siguiente pedido (#${newOrder.id}):%0A%0A`;
+            if (currentUser) {
+                message += `*Cliente:* ${currentUser.name} (${currentUser.email})%0A%0A`;
+            }
             cart.forEach((item, index) => {
                 message += `${index + 1}. *${item.name}* (${item.size}) x${item.quantity} - $${(item.price * item.quantity).toLocaleString('es-MX')} MXN%0A`;
             });
-            message += `%0ASubtotal: $${subtotal.toLocaleString('es-MX')} MXN`;
+            message += `%0ASubtotal: $${rawSubtotal.toLocaleString('es-MX')} MXN`;
+            if (promoActive && discountAmount > 0) {
+                message += `%0A🎁 *Descuento Registro (5% OFF): -$${discountAmount.toLocaleString('es-MX')} MXN*`;
+            }
             message += `%0AEnvío Asegurado: ${shipping}`;
             message += `%0A*Total: $${total.toLocaleString('es-MX')} MXN*%0A%0A¡Quedo a la espera para coordinar el pago y envío!`;
 
             const whatsappUrl = `https://wa.me/9812059251?text=${message}`;
             window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+            showToast(`Pedido #${newOrder.id} guardado en Mis Pedidos`);
         }
 
         function toggleCart() {
+            document.getElementById('wishlist-drawer').classList.add('hidden');
+            document.getElementById('orders-drawer').classList.add('hidden');
             const drawer = document.getElementById('cart-drawer');
             drawer.classList.toggle('hidden');
         }
@@ -1289,7 +1654,6 @@
             }, 3000);
         }
 
-        // IntersectionObserver para activar las animaciones de transición en la sección de accesorios
         function initScrollAnimations() {
             const revealElements = document.querySelectorAll('.section-reveal');
             const observer = new IntersectionObserver((entries) => {
@@ -1304,9 +1668,13 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            startPromoTimer();
+            updateAuthUI();
             renderCatalog();
             renderExtras();
             updateCartUI();
+            updateWishlistBadge();
+            updateOrdersDrawerUI();
             initScrollAnimations();
             lucide.createIcons();
         });
